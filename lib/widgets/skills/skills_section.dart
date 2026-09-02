@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
 import '../../core/theme/app_colors.dart';
+import '../../core/constants/app_icons.dart';
 import '../../core/constants/constants.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/responsive/responsive_layout.dart';
 import '../../data/portfolio_data.dart';
 import '../../controllers/background_controller.dart';
-import '../../core/constants/app_icons.dart';
 import '../../models/skill.dart';
 
 class SkillsSection extends StatelessWidget {
@@ -52,6 +52,8 @@ class SkillsSection extends StatelessWidget {
   }
 
   Widget _buildDecorativeRings(Animation<double> animation) {
+    const app_icon = Icons.blur_circular_rounded;
+    const app_color = AppColors.gold;
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
@@ -59,11 +61,7 @@ class SkillsSection extends StatelessWidget {
           angle: animation.value * 2 * pi,
           child: Opacity(
             opacity: 0.03,
-            child: Icon(
-              Icons.blur_circular_rounded,
-              size: 800,
-              color: AppColors.gold,
-            ),
+            child: Icon(app_icon, size: 800, color: app_color),
           ),
         );
       },
@@ -76,37 +74,33 @@ class SkillsSection extends StatelessWidget {
   ) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1200),
-        child: Column(
+        constraints: const BoxConstraints(maxWidth: 1500),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildMobileWithTitle(
-                  context,
-                  PortfolioData.skillCategories[0],
-                  animation,
-                  index: 0,
-                ),
-                _buildMobileWithTitle(
-                  context,
-                  PortfolioData.skillCategories[1],
-                  animation,
-                  index: 1,
-                ),
-                _buildMobileWithTitle(
-                  context,
-                  PortfolioData.skillCategories[2],
-                  animation,
-                  index: 2,
-                ),
-                _buildMobileWithTitle(
-                  context,
-                  PortfolioData.skillCategories[3],
-                  animation,
-                  index: 3,
-                ),
-              ],
+            _buildWebWithTitle(
+              context,
+              PortfolioData.skillCategories[0],
+              animation,
+              index: 0,
+            ),
+            _buildWebWithTitle(
+              context,
+              PortfolioData.skillCategories[1],
+              animation,
+              index: 1,
+            ),
+            _buildWebWithTitle(
+              context,
+              PortfolioData.skillCategories[2],
+              animation,
+              index: 2,
+            ),
+            _buildWebWithTitle(
+              context,
+              PortfolioData.skillCategories[3],
+              animation,
+              index: 3,
             ),
           ],
         ),
@@ -114,46 +108,37 @@ class SkillsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildMobileWithTitle(
+  Widget _buildWebWithTitle(
     BuildContext context,
     SkillCategory category,
     Animation<double> animation, {
     required int index,
   }) {
-    final isLeft = index % 2 == 0;
     return Column(
       children: [
         _buildCategoryHeader(context, category),
         const SizedBox(height: 30),
-        isLeft
-            ? FadeInLeft(
-                duration: const Duration(milliseconds: 1000),
-                delay: Duration(milliseconds: index * 200),
-                child: _MobileMockup(category: category, animation: animation),
-              )
-            : FadeInRight(
-                duration: const Duration(milliseconds: 1000),
-                delay: Duration(milliseconds: index * 200),
-                child: _MobileMockup(category: category, animation: animation),
-              ),
+        FadeInUp(
+          duration: const Duration(milliseconds: 1000),
+          delay: Duration(milliseconds: index * 200),
+          child: _WebMockup(category: category, animation: animation),
+        ),
       ],
     );
   }
 
   Widget _buildCategoryHeader(BuildContext context, SkillCategory category) {
+    final app_icon = _getCategoryIcon(category.title);
+    const app_color = AppColors.gold;
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.gold.withValues(alpha: 0.1),
+            color: app_color.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: Icon(
-            _getCategoryIcon(category.title),
-            color: AppColors.gold,
-            size: 20,
-          ),
+          child: Icon(app_icon, color: app_color, size: 20),
         ),
         const SizedBox(height: 10),
         Text(
@@ -161,7 +146,7 @@ class SkillsSection extends StatelessWidget {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w900,
-            color: AppColors.gold,
+            color: app_color,
             letterSpacing: 2,
           ),
         ),
@@ -194,6 +179,7 @@ class SkillsSection extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
+    const app_color = AppColors.gold;
     return Column(
       crossAxisAlignment: isMobile
           ? CrossAxisAlignment.center
@@ -202,19 +188,20 @@ class SkillsSection extends StatelessWidget {
         const Text(
           AppStrings.skillsAndTech,
           style: TextStyle(
-            color: AppColors.gold,
+            color: app_color,
             fontWeight: FontWeight.w600,
             letterSpacing: 4,
           ),
         ),
         const SizedBox(height: 10),
-        Container(width: 50, height: 2, color: AppColors.gold),
+        Container(width: 50, height: 2, color: app_color),
       ],
     );
   }
 
   Widget _buildSkillCategoryCard(BuildContext context, SkillCategory category) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    const app_color = AppColors.gold;
 
     return GetBuilder<SkillHoverController>(
       init: SkillHoverController(),
@@ -228,18 +215,20 @@ class SkillsSection extends StatelessWidget {
             width: ResponsiveLayout.isMobile(context) ? double.infinity : 500,
             padding: const EdgeInsets.all(30),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF0A0A0A) : Colors.white,
+              color: isDark
+                  ? app_color.withValues(alpha: 0.02)
+                  : app_color.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: controller.isHovered
-                    ? AppColors.gold
-                    : AppColors.gold.withValues(alpha: 0.15),
+                    ? app_color
+                    : app_color.withValues(alpha: 0.15),
                 width: controller.isHovered ? 1.5 : 0.5,
               ),
               boxShadow: [
                 if (controller.isHovered)
                   BoxShadow(
-                    color: AppColors.gold.withValues(alpha: 0.2),
+                    color: app_color.withValues(alpha: 0.2),
                     blurRadius: 30,
                     spreadRadius: -5,
                   ),
@@ -255,13 +244,13 @@ class SkillsSection extends StatelessWidget {
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         color: controller.isHovered
-                            ? AppColors.gold.withValues(alpha: 0.2)
-                            : AppColors.gold.withValues(alpha: 0.1),
+                            ? app_color.withValues(alpha: 0.2)
+                            : app_color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Icon(
                         _getCategoryIcon(category.title),
-                        color: AppColors.gold,
+                        color: app_color,
                         size: 24,
                       ),
                     ),
@@ -300,11 +289,11 @@ class SkillsSection extends StatelessWidget {
   }
 
   IconData _getCategoryIcon(String title) {
-    if (title.contains("Mobile")) return Icons.phone_android_rounded;
-    if (title.contains("State")) return Icons.account_tree_rounded;
-    if (title.contains("Backend")) return Icons.cloud_queue_rounded;
-    if (title.contains("Tools")) return Icons.architecture_rounded;
-    return Icons.code_rounded;
+    if (title.contains("Mobile")) return AppIcons.mobileApp;
+    if (title.contains("State")) return AppIcons.getx;
+    if (title.contains("Backend")) return AppIcons.api;
+    if (title.contains("Tools")) return AppIcons.uiDesign;
+    return AppIcons.code;
   }
 
   Widget _buildSkillChip(
@@ -313,6 +302,8 @@ class SkillsSection extends StatelessWidget {
     bool parentHovered,
   ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final app_icon = skill.icon;
+    const app_color = AppColors.gold;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -320,28 +311,24 @@ class SkillsSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark
             ? (parentHovered
-                  ? const Color(0xFF151515)
-                  : const Color(0xFF111111))
+                  ? app_color.withValues(alpha: 0.08)
+                  : app_color.withValues(alpha: 0.04))
             : (parentHovered
-                  ? const Color(0xFFF9FAFB)
-                  : const Color(0xFFF3F4F6)),
+                  ? app_color.withValues(alpha: 0.1)
+                  : app_color.withValues(alpha: 0.05)),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: parentHovered
-              ? AppColors.gold.withValues(alpha: 0.3)
-              : AppColors.gold.withValues(alpha: 0.1),
+              ? app_color.withValues(alpha: 0.3)
+              : app_color.withValues(alpha: 0.1),
           width: 0.5,
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (skill.icon != null)
-            Icon(
-              skill.icon,
-              size: 18,
-              color: AppColors.gold.withValues(alpha: 0.8),
-            ),
+          if (app_icon != null)
+            Icon(app_icon, size: 18, color: app_color.withValues(alpha: 0.8)),
           const SizedBox(width: 10),
           Text(
             skill.name,
@@ -359,15 +346,16 @@ class SkillsSection extends StatelessWidget {
   }
 }
 
-class _MobileMockup extends StatelessWidget {
+class _WebMockup extends StatelessWidget {
   final SkillCategory category;
   final Animation<double> animation;
 
-  const _MobileMockup({required this.category, required this.animation});
+  const _WebMockup({required this.category, required this.animation});
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    const app_color = AppColors.gold;
 
     return GetBuilder<SkillHoverController>(
       init: SkillHoverController(),
@@ -379,28 +367,30 @@ class _MobileMockup extends StatelessWidget {
           child: AnimatedBuilder(
             animation: animation,
             builder: (context, child) {
-              final double slideCycle = (animation.value * 5) % 1.0;
-              final double curvedSlide = Curves.easeInOutCubic.transform(
-                slideCycle,
+              final double scrollCycle = (animation.value * 4) % 1.0;
+              final double curvedScroll = Curves.easeInOutQuart.transform(
+                scrollCycle,
               );
 
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                width: 220,
-                height: 440,
+                width: 320,
+                height: 350,
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF030303) : Colors.white,
-                  borderRadius: BorderRadius.circular(35),
+                  color: isDark
+                      ? app_color.withValues(alpha: 0.02)
+                      : app_color.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(15),
                   border: Border.all(
                     color: controller.isHovered
-                        ? AppColors.gold
-                        : AppColors.gold.withValues(alpha: 0.3),
-                    width: controller.isHovered ? 3 : 2,
+                        ? app_color
+                        : app_color.withValues(alpha: 0.2),
+                    width: controller.isHovered ? 2 : 1.5,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.gold.withValues(
-                        alpha: controller.isHovered ? 0.25 : 0.1,
+                      color: app_color.withValues(
+                        alpha: controller.isHovered ? 0.2 : 0.05,
                       ),
                       blurRadius: controller.isHovered ? 40 : 20,
                       spreadRadius: controller.isHovered ? 5 : 0,
@@ -408,66 +398,45 @@ class _MobileMockup extends StatelessWidget {
                   ],
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: Stack(
+                child: Column(
                   children: [
-                    // Screen Content
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: -(curvedSlide * (category.skills.length * 40)),
-                      child: Column(
+                    // Browser UI Header
+                    _buildBrowserHeader(isDark, category.title),
+                    // Content Area
+                    Expanded(
+                      child: Stack(
                         children: [
-                          ...category.skills.map(
-                            (skill) => _buildSkillItem(skill, isDark),
-                          ),
-                          // Loop content for smooth scrolling
-                          ...category.skills.map(
-                            (skill) => _buildSkillItem(skill, isDark),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Hardware Gloss
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Colors.white.withValues(alpha: 0.05),
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 0.05),
-                            ],
-                            stops: const [0, 0.5, 1],
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Notch
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        width: 85,
-                        height: 25,
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? const Color(0xFF1A1A1A)
-                              : const Color(0xFFE5E7EB),
-                          borderRadius: const BorderRadius.vertical(
-                            bottom: Radius.circular(15),
-                          ),
-                        ),
-                        child: Center(
-                          child: Container(
-                            width: 30,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(2),
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            top:
+                                -(curvedScroll * (category.skills.length * 60)),
+                            child: Column(
+                              children: [
+                                ...category.skills.map(
+                                  (skill) => _buildWebSkillItem(skill, isDark),
+                                ),
+                                // Loop content for smooth scrolling
+                                ...category.skills.map(
+                                  (skill) => _buildWebSkillItem(skill, isDark),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
+                          // Side scrollbar decoration
+                          Positioned(
+                            right: 2,
+                            top: 10,
+                            bottom: 10,
+                            child: Container(
+                              width: 3,
+                              decoration: BoxDecoration(
+                                color: app_color.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -480,55 +449,109 @@ class _MobileMockup extends StatelessWidget {
     );
   }
 
-  Widget _buildSkillItem(Skill skill, bool isDark) {
+  Widget _buildBrowserHeader(bool isDark, String title) {
+    const app_color = AppColors.gold;
+    const app_icon_lock = AppIcons.auth;
+    const app_icon_refresh = AppIcons.refresh;
+
     return Container(
-      height: 75,
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-      padding: const EdgeInsets.all(15),
+      height: 32,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: AppColors.gold.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.1)),
+        color: isDark ? const Color(0xFF111111) : const Color(0xFFF9FAFB),
+        border: Border(
+          bottom: BorderSide(color: app_color.withValues(alpha: 0.1), width: 1),
+        ),
       ),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppColors.gold.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              skill.icon ?? AppIcons.rocket,
-              color: AppColors.gold,
-              size: 18,
+          _dot(app_color.withValues(alpha: 0.5)),
+          _dot(app_color.withValues(alpha: 0.3)),
+          _dot(app_color.withValues(alpha: 0.2)),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Container(
+              height: 18,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.black
+                    : app_color.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: app_color.withValues(alpha: 0.1)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    app_icon_lock,
+                    size: 8,
+                    color: app_color.withValues(alpha: 0.5),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    "${title.toLowerCase().replaceAll(' ', '-')}.io",
+                    style: TextStyle(
+                      fontSize: 9,
+                      color: app_color.withValues(alpha: 0.6),
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  skill.name.toUpperCase(),
-                  style: const TextStyle(
-                    color: AppColors.gold,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Container(
-                  width: 30,
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: AppColors.gold.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(1.5),
-                  ),
-                ),
-              ],
+          Icon(
+            app_icon_refresh,
+            size: 12,
+            color: app_color.withValues(alpha: 0.3),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _dot(Color c) => Container(
+    width: 8,
+    height: 8,
+    margin: const EdgeInsets.only(right: 6),
+    decoration: BoxDecoration(color: c, shape: BoxShape.circle),
+  );
+
+  Widget _buildWebSkillItem(Skill skill, bool isDark) {
+    const app_color = AppColors.gold;
+    final app_icon = skill.icon ?? Icons.code_rounded;
+    return Container(
+      height: 60,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        color: app_color.withValues(alpha: 0.04),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: app_color.withValues(alpha: 0.1)),
+      ),
+      child: Row(
+        children: [
+          Icon(app_icon, color: app_color, size: 20),
+          const SizedBox(width: 20),
+          Text(
+            skill.name,
+            style: const TextStyle(
+              color: app_color,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const Spacer(),
+          Container(
+            width: 40,
+            height: 6,
+            decoration: BoxDecoration(
+              color: app_color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(3),
             ),
           ),
         ],
