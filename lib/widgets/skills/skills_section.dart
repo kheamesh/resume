@@ -1,4 +1,5 @@
-import 'dart:math';
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
@@ -48,23 +49,6 @@ class SkillsSection extends StatelessWidget {
             ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDecorativeRings(Animation<double> animation) {
-    const app_icon = Icons.blur_circular_rounded;
-    const app_color = AppColors.gold;
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, child) {
-        return Transform.rotate(
-          angle: animation.value * 2 * pi,
-          child: Opacity(
-            opacity: 0.03,
-            child: Icon(app_icon, size: 800, color: app_color),
-          ),
-        );
-      },
     );
   }
 
@@ -171,10 +155,6 @@ class SkillsSection extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildSkillCategory(BuildContext context, SkillCategory category) {
-    return _buildSkillCategoryCard(context, category);
   }
 
   Widget _buildHeader(BuildContext context) {

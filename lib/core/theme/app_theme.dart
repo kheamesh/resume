@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
@@ -18,10 +20,7 @@ class AppTheme {
       ),
       textTheme: GoogleFonts.poppinsTextTheme(
         Theme.of(context).textTheme,
-      ).apply(
-        bodyColor: AppColors.darkText,
-        displayColor: AppColors.darkText,
-      ),
+      ).apply(bodyColor: AppColors.darkText, displayColor: AppColors.darkText),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -55,12 +54,11 @@ class AppTheme {
         onSurface: AppColors.lightText,
         onSurfaceVariant: AppColors.lightMutedText,
       ),
-      textTheme: GoogleFonts.poppinsTextTheme(
-        Theme.of(context).textTheme,
-      ).apply(
-        bodyColor: AppColors.lightText,
-        displayColor: AppColors.lightText,
-      ),
+      textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+          .apply(
+            bodyColor: AppColors.lightText,
+            displayColor: AppColors.lightText,
+          ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,

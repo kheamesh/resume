@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, constant_identifier_names, non_constant_identifier_names
+
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

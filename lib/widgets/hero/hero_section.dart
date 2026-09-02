@@ -21,7 +21,10 @@ class HeroSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       constraints: BoxConstraints(minHeight: size.height),
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: isMobile ? 120 : 0),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: isMobile ? 120 : 0,
+      ),
       decoration: const BoxDecoration(color: Colors.transparent),
       child: ResponsiveLayout(
         desktop: _buildDesktop(context),
@@ -33,15 +36,9 @@ class HeroSection extends StatelessWidget {
   Widget _buildDesktop(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          flex: 3,
-          child: _buildInfo(context),
-        ),
+        Expanded(flex: 3, child: _buildInfo(context)),
         const SizedBox(width: 40),
-        Expanded(
-          flex: 2,
-          child: _buildVisual(context),
-        ),
+        Expanded(flex: 2, child: _buildVisual(context)),
       ],
     );
   }
@@ -67,12 +64,14 @@ class HeroSection extends StatelessWidget {
 
   Widget _buildInfo(BuildContext context) {
     final isDesktop = ResponsiveLayout.isDesktop(context);
-    final isMobile = ResponsiveLayout.isMobile(context);
+    ResponsiveLayout.isMobile(context);
     final useNarrowStyling = !isDesktop;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: useNarrowStyling ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: useNarrowStyling
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         Container(
           padding: EdgeInsets.all(useNarrowStyling ? 25 : 45),
@@ -87,7 +86,9 @@ class HeroSection extends StatelessWidget {
             ),
           ),
           child: Column(
-            crossAxisAlignment: useNarrowStyling ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+            crossAxisAlignment: useNarrowStyling
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               FadeInDown(
@@ -108,10 +109,14 @@ class HeroSection extends StatelessWidget {
                 delay: const Duration(milliseconds: 200),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
-                  alignment: useNarrowStyling ? Alignment.center : Alignment.centerLeft,
+                  alignment: useNarrowStyling
+                      ? Alignment.center
+                      : Alignment.centerLeft,
                   child: Text(
                     PortfolioData.name,
-                    textAlign: useNarrowStyling ? TextAlign.center : TextAlign.start,
+                    textAlign: useNarrowStyling
+                        ? TextAlign.center
+                        : TextAlign.start,
                     style: TextStyle(
                       fontSize: useNarrowStyling ? 48 : 80,
                       fontWeight: FontWeight.w900,
@@ -142,7 +147,9 @@ class HeroSection extends StatelessWidget {
                   constraints: const BoxConstraints(maxWidth: 600),
                   child: Text(
                     PortfolioData.shortIntro,
-                    textAlign: useNarrowStyling ? TextAlign.center : TextAlign.start,
+                    textAlign: useNarrowStyling
+                        ? TextAlign.center
+                        : TextAlign.start,
                     style: TextStyle(
                       fontSize: 18,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -214,14 +221,13 @@ class HeroSection extends StatelessWidget {
   Widget _buildSocials(BuildContext context) {
     final useNarrowStyling = !ResponsiveLayout.isDesktop(context);
     return Row(
-      mainAxisAlignment: useNarrowStyling ? MainAxisAlignment.center : MainAxisAlignment.start,
+      mainAxisAlignment: useNarrowStyling
+          ? MainAxisAlignment.center
+          : MainAxisAlignment.start,
       children: [
         _SocialIcon(icon: AppIcons.github, url: PortfolioData.github),
         const SizedBox(width: 20),
-        _SocialIcon(
-          icon: AppIcons.linkedin,
-          url: PortfolioData.linkedin,
-        ),
+        _SocialIcon(icon: AppIcons.linkedin, url: PortfolioData.linkedin),
         const SizedBox(width: 20),
         _SocialIcon(icon: AppIcons.email, url: "mailto:${PortfolioData.email}"),
       ],
