@@ -234,9 +234,9 @@ class TechVisual extends StatelessWidget {
           : app_color.withValues(alpha: 0.04),
       child: Row(
         children: [
-          _dot(app_color.withValues(alpha: 0.5)),
-          _dot(app_color.withValues(alpha: 0.3)),
-          _dot(app_color.withValues(alpha: 0.2)),
+          _dot(Colors.redAccent.withValues(alpha: 0.8)),
+          _dot(Colors.amberAccent.withValues(alpha: 0.8)),
+          _dot(Colors.greenAccent.withValues(alpha: 0.8)),
           const SizedBox(width: 15),
           Expanded(
             child: Container(

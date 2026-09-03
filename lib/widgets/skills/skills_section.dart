@@ -59,83 +59,38 @@ class SkillsSection extends StatelessWidget {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 1500),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _buildWebWithTitle(
-              context,
-              PortfolioData.skillCategories[0],
-              animation,
-              index: 0,
-            ),
-            _buildWebWithTitle(
-              context,
-              PortfolioData.skillCategories[1],
-              animation,
-              index: 1,
-            ),
-            _buildWebWithTitle(
-              context,
-              PortfolioData.skillCategories[2],
-              animation,
-              index: 2,
-            ),
-            _buildWebWithTitle(
-              context,
-              PortfolioData.skillCategories[3],
-              animation,
-              index: 3,
-            ),
-          ],
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: PortfolioData.skillCategories.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 30,
+            mainAxisSpacing: 30,
+            childAspectRatio: 4.2,
+          ),
+          itemBuilder: (context, index) {
+            final category = PortfolioData.skillCategories[index];
+            final isLeft = index % 2 == 0;
+            return isLeft
+                ? FadeInLeft(
+                    duration: const Duration(milliseconds: 800),
+                    delay: Duration(milliseconds: index * 100),
+                    child: _buildSkillCategory(context, category),
+                  )
+                : FadeInRight(
+                    duration: const Duration(milliseconds: 800),
+                    delay: Duration(milliseconds: index * 100),
+                    child: _buildSkillCategory(context, category),
+                  );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildWebWithTitle(
-    BuildContext context,
-    SkillCategory category,
-    Animation<double> animation, {
-    required int index,
-  }) {
-    return Column(
-      children: [
-        _buildCategoryHeader(context, category),
-        const SizedBox(height: 30),
-        FadeInUp(
-          duration: const Duration(milliseconds: 1000),
-          delay: Duration(milliseconds: index * 200),
-          child: _WebMockup(category: category, animation: animation),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCategoryHeader(BuildContext context, SkillCategory category) {
-    final app_icon = _getCategoryIcon(category.title);
-    const app_color = AppColors.gold;
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: app_color.withValues(alpha: 0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(app_icon, color: app_color, size: 20),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          category.title.toUpperCase(),
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w900,
-            color: app_color,
-            letterSpacing: 2,
-          ),
-        ),
-      ],
-    );
+  Widget _buildSkillCategory(BuildContext context, SkillCategory category) {
+    return _buildSkillCategoryCard(context, category);
   }
 
   Widget _buildMobileLayout(BuildContext context) {
@@ -193,11 +148,9 @@ class SkillsSection extends StatelessWidget {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             width: ResponsiveLayout.isMobile(context) ? double.infinity : 500,
-            padding: const EdgeInsets.all(30),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: isDark
-                  ? app_color.withValues(alpha: 0.02)
-                  : app_color.withValues(alpha: 0.05),
+              color: isDark ? const Color(0xFF050505) : Colors.white,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: controller.isHovered
@@ -246,7 +199,7 @@ class SkillsSection extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
@@ -284,6 +237,7 @@ class SkillsSection extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final app_icon = skill.icon;
     const app_color = AppColors.gold;
+    final brandColor = _getBrandColor(skill.name);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -291,11 +245,11 @@ class SkillsSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark
             ? (parentHovered
-                  ? app_color.withValues(alpha: 0.08)
-                  : app_color.withValues(alpha: 0.04))
+                  ? const Color(0xFF151515)
+                  : const Color(0xFF101010))
             : (parentHovered
-                  ? app_color.withValues(alpha: 0.1)
-                  : app_color.withValues(alpha: 0.05)),
+                  ? const Color(0xFFF1F5F9)
+                  : const Color(0xFFF8FAFC)),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: parentHovered
@@ -307,8 +261,7 @@ class SkillsSection extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (app_icon != null)
-            Icon(app_icon, size: 18, color: app_color.withValues(alpha: 0.8)),
+          if (app_icon != null) Icon(app_icon, size: 18, color: brandColor),
           const SizedBox(width: 10),
           Text(
             skill.name,
@@ -326,218 +279,22 @@ class SkillsSection extends StatelessWidget {
   }
 }
 
-class _WebMockup extends StatelessWidget {
-  final SkillCategory category;
-  final Animation<double> animation;
-
-  const _WebMockup({required this.category, required this.animation});
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    const app_color = AppColors.gold;
-
-    return GetBuilder<SkillHoverController>(
-      init: SkillHoverController(),
-      tag: category.title,
-      builder: (controller) {
-        return MouseRegion(
-          onEnter: (_) => controller.setHovered(true),
-          onExit: (_) => controller.setHovered(false),
-          child: AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) {
-              final double scrollCycle = (animation.value * 4) % 1.0;
-              final double curvedScroll = Curves.easeInOutQuart.transform(
-                scrollCycle,
-              );
-
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                width: 320,
-                height: 350,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? app_color.withValues(alpha: 0.02)
-                      : app_color.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(
-                    color: controller.isHovered
-                        ? app_color
-                        : app_color.withValues(alpha: 0.2),
-                    width: controller.isHovered ? 2 : 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: app_color.withValues(
-                        alpha: controller.isHovered ? 0.2 : 0.05,
-                      ),
-                      blurRadius: controller.isHovered ? 40 : 20,
-                      spreadRadius: controller.isHovered ? 5 : 0,
-                    ),
-                  ],
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    // Browser UI Header
-                    _buildBrowserHeader(isDark, category.title),
-                    // Content Area
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            left: 0,
-                            right: 0,
-                            top:
-                                -(curvedScroll * (category.skills.length * 60)),
-                            child: Column(
-                              children: [
-                                ...category.skills.map(
-                                  (skill) => _buildWebSkillItem(skill, isDark),
-                                ),
-                                // Loop content for smooth scrolling
-                                ...category.skills.map(
-                                  (skill) => _buildWebSkillItem(skill, isDark),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Side scrollbar decoration
-                          Positioned(
-                            right: 2,
-                            top: 10,
-                            bottom: 10,
-                            child: Container(
-                              width: 3,
-                              decoration: BoxDecoration(
-                                color: app_color.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildBrowserHeader(bool isDark, String title) {
-    const app_color = AppColors.gold;
-    const app_icon_lock = AppIcons.auth;
-    const app_icon_refresh = AppIcons.refresh;
-
-    return Container(
-      height: 32,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF111111) : const Color(0xFFF9FAFB),
-        border: Border(
-          bottom: BorderSide(color: app_color.withValues(alpha: 0.1), width: 1),
-        ),
-      ),
-      child: Row(
-        children: [
-          _dot(app_color.withValues(alpha: 0.5)),
-          _dot(app_color.withValues(alpha: 0.3)),
-          _dot(app_color.withValues(alpha: 0.2)),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Container(
-              height: 18,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.black
-                    : app_color.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: app_color.withValues(alpha: 0.1)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    app_icon_lock,
-                    size: 8,
-                    color: app_color.withValues(alpha: 0.5),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    "${title.toLowerCase().replaceAll(' ', '-')}.io",
-                    style: TextStyle(
-                      fontSize: 9,
-                      color: app_color.withValues(alpha: 0.6),
-                      letterSpacing: 0.5,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 15),
-          Icon(
-            app_icon_refresh,
-            size: 12,
-            color: app_color.withValues(alpha: 0.3),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _dot(Color c) => Container(
-    width: 8,
-    height: 8,
-    margin: const EdgeInsets.only(right: 6),
-    decoration: BoxDecoration(color: c, shape: BoxShape.circle),
-  );
-
-  Widget _buildWebSkillItem(Skill skill, bool isDark) {
-    const app_color = AppColors.gold;
-    final app_icon = skill.icon ?? Icons.code_rounded;
-    return Container(
-      height: 60,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-        color: app_color.withValues(alpha: 0.04),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: app_color.withValues(alpha: 0.1)),
-      ),
-      child: Row(
-        children: [
-          Icon(app_icon, color: app_color, size: 20),
-          const SizedBox(width: 20),
-          Text(
-            skill.name,
-            style: const TextStyle(
-              color: app_color,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.5,
-            ),
-          ),
-          const Spacer(),
-          Container(
-            width: 40,
-            height: 6,
-            decoration: BoxDecoration(
-              color: app_color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(3),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+Color _getBrandColor(String name) {
+  name = name.toLowerCase();
+  if (name.contains("flutter")) return Colors.blue;
+  if (name.contains("dart")) return Colors.blueAccent;
+  if (name.contains("android")) return Colors.green;
+  if (name.contains("ios")) return Colors.grey;
+  if (name.contains("getx")) return Colors.deepPurpleAccent;
+  if (name.contains("provider")) return Colors.blue;
+  if (name.contains("riverpod")) return Colors.lightBlue;
+  if (name.contains("firebase")) return Colors.orangeAccent;
+  if (name.contains("api") || name.contains("dio")) return Colors.orange;
+  if (name.contains("auth")) return Colors.redAccent;
+  if (name.contains("git")) return const Color(0xFFF05032);
+  if (name.contains("figma")) return Colors.purple;
+  if (name.contains("postman")) return Colors.orange;
+  return AppColors.gold;
 }
 
 class SkillHoverController extends GetxController {

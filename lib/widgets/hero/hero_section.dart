@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_icons.dart';
 import '../../core/theme/app_colors.dart';
@@ -64,8 +65,8 @@ class HeroSection extends StatelessWidget {
 
   Widget _buildInfo(BuildContext context) {
     final isDesktop = ResponsiveLayout.isDesktop(context);
-    ResponsiveLayout.isMobile(context);
     final useNarrowStyling = !isDesktop;
+    const appColor = AppColors.gold;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -73,93 +74,118 @@ class HeroSection extends StatelessWidget {
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: EdgeInsets.all(useNarrowStyling ? 25 : 45),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.4),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-              color:
-                  Theme.of(context).dividerTheme.color ??
-                  Colors.grey.withValues(alpha: 0.2),
-              width: 0.5,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: useNarrowStyling
-                ? CrossAxisAlignment.center
-                : CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FadeInDown(
-                duration: const Duration(milliseconds: 800),
-                child: Text(
-                  AppStrings.helloIm,
-                  style: TextStyle(
-                    color: AppColors.gold,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 4,
-                    fontSize: useNarrowStyling ? 14 : 16,
+        GetBuilder<HeroHoverController>(
+          init: HeroHoverController(),
+          builder: (controller) {
+            return MouseRegion(
+              onEnter: (_) => controller.setHovered(true),
+              onExit: (_) => controller.setHovered(false),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                padding: EdgeInsets.all(useNarrowStyling ? 25 : 45),
+                decoration: BoxDecoration(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surface
+                      .withValues(alpha: controller.isHovered ? 0.6 : 0.4),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: controller.isHovered
+                        ? appColor
+                        : appColor.withValues(alpha: 0.2),
+                    width: controller.isHovered ? 1.5 : 0.5,
                   ),
+                  boxShadow: [
+                    if (controller.isHovered)
+                      BoxShadow(
+                        color: appColor.withValues(alpha: 0.15),
+                        blurRadius: 40,
+                        spreadRadius: -5,
+                      ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 20),
-              FadeInLeft(
-                duration: const Duration(milliseconds: 800),
-                delay: const Duration(milliseconds: 200),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: useNarrowStyling
-                      ? Alignment.center
-                      : Alignment.centerLeft,
-                  child: Text(
-                    PortfolioData.name,
-                    textAlign: useNarrowStyling
-                        ? TextAlign.center
-                        : TextAlign.start,
-                    style: TextStyle(
-                      fontSize: useNarrowStyling ? 48 : 80,
-                      fontWeight: FontWeight.w900,
-                      color: Theme.of(context).textTheme.displayLarge?.color,
-                      height: 1.1,
+                child: Column(
+                  crossAxisAlignment: useNarrowStyling
+                      ? CrossAxisAlignment.center
+                      : CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FadeInDown(
+                      duration: const Duration(milliseconds: 800),
+                      child: Text(
+                        AppStrings.helloIm,
+                        style: TextStyle(
+                          color: appColor,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 4,
+                          fontSize: useNarrowStyling ? 14 : 16,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              FadeInLeft(
-                duration: const Duration(milliseconds: 800),
-                delay: const Duration(milliseconds: 400),
-                child: Text(
-                  PortfolioData.role,
-                  style: TextStyle(
-                    fontSize: useNarrowStyling ? 18 : 24,
-                    color: AppColors.goldAccent,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 30),
-              FadeInUp(
-                duration: const Duration(milliseconds: 800),
-                delay: const Duration(milliseconds: 600),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 600),
-                  child: Text(
-                    PortfolioData.shortIntro,
-                    textAlign: useNarrowStyling
-                        ? TextAlign.center
-                        : TextAlign.start,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      height: 1.6,
+                    const SizedBox(height: 20),
+                    FadeInLeft(
+                      duration: const Duration(milliseconds: 800),
+                      delay: const Duration(milliseconds: 200),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: useNarrowStyling
+                            ? Alignment.center
+                            : Alignment.centerLeft,
+                        child: Text(
+                          PortfolioData.name,
+                          textAlign: useNarrowStyling
+                              ? TextAlign.center
+                              : TextAlign.start,
+                          style: TextStyle(
+                            fontSize: useNarrowStyling ? 48 : 80,
+                            fontWeight: FontWeight.w900,
+                            color: Theme.of(context)
+                                .textTheme
+                                .displayLarge
+                                ?.color,
+                            height: 1.1,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 10),
+                    FadeInLeft(
+                      duration: const Duration(milliseconds: 800),
+                      delay: const Duration(milliseconds: 400),
+                      child: Text(
+                        PortfolioData.role,
+                        style: TextStyle(
+                          fontSize: useNarrowStyling ? 18 : 24,
+                          color: AppColors.goldAccent,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 30),
+                    FadeInUp(
+                      duration: const Duration(milliseconds: 800),
+                      delay: const Duration(milliseconds: 600),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 600),
+                        child: Text(
+                          PortfolioData.shortIntro,
+                          textAlign: useNarrowStyling
+                              ? TextAlign.center
+                              : TextAlign.start,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                            height: 1.6,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            );
+          },
         ),
         const SizedBox(height: 40),
         FadeInUp(
@@ -261,5 +287,13 @@ class _SocialIcon extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class HeroHoverController extends GetxController {
+  bool isHovered = false;
+  void setHovered(bool val) {
+    isHovered = val;
+    update();
   }
 }
