@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_icons.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../controllers/background_controller.dart';
@@ -21,30 +22,35 @@ class TechVisual extends StatelessWidget {
         // Automatically determine size based on parent constraints
         final double size = min(constraints.maxWidth, 600);
 
-        return SizedBox(
-          width: size,
-          height: size,
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: SizedBox(
-              width: 600,
-              height: 600,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // 1. Technical Atmosphere
-                  _buildPulseGlow(isDark),
-                  _buildTechnicalRings(controller.animationController),
+        return RepaintBoundary(
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: SizedBox(
+                width: 600,
+                height: 600,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // 1. Technical Atmosphere
+                    _buildPulseGlow(isDark),
+                    _buildTechnicalRings(controller.animationController),
 
-                  // 2. The Devices (Isometric Automatic Content Engine)
-                  _buildDeviceShowcase(controller.animationController, isDark),
+                    // 2. The Devices (Isometric Automatic Content Engine)
+                    _buildDeviceShowcase(
+                      controller.animationController,
+                      isDark,
+                    ),
 
-                  // 3. Dynamic Technical Labels
-                  _buildFloatingElements(
-                    controller.animationController,
-                    isDark,
-                  ),
-                ],
+                    // 3. Dynamic Technical Labels
+                    _buildFloatingElements(
+                      controller.animationController,
+                      isDark,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -63,7 +69,7 @@ class TechVisual extends StatelessWidget {
         gradient: RadialGradient(
           colors: [
             app_color.withValues(alpha: isDark ? 0.1 : 0.05),
-            Colors.transparent,
+            AppColors.transparent,
           ],
         ),
       ),
@@ -103,7 +109,6 @@ class TechVisual extends StatelessWidget {
   }
 
   Widget _buildAutomaticWeb(Animation<double> animation, bool isDark) {
-    // Smoother "Automatic Browsing" with eased pauses
     final double scrollCycle = (animation.value * 5) % 1.0;
     final double curvedScroll = Curves.easeInOutQuart.transform(scrollCycle);
     final int pageSet = (animation.value * 5).floor() % 3;
@@ -113,7 +118,7 @@ class TechVisual extends StatelessWidget {
       width: 350,
       height: 240,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF030303) : Colors.white,
+        color: isDark ? AppColors.darkBg : AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: app_color.withValues(alpha: 0.4), width: 1.5),
         boxShadow: [
@@ -127,9 +132,7 @@ class TechVisual extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
-          // Browser UI Header
           _buildBrowserUI(isDark, pageSet),
-          // Scrolling Web Content
           Expanded(
             child: Stack(
               children: [
@@ -153,7 +156,6 @@ class TechVisual extends StatelessWidget {
   }
 
   Widget _buildAutomaticMobile(Animation<double> animation, bool isDark) {
-    // High-performance "Sliding Apps" list
     final double slideCycle = (animation.value * 8) % 1.0;
     final double curvedSlide = Curves.easeOutCubic.transform(slideCycle);
     const app_color = AppColors.gold;
@@ -162,7 +164,7 @@ class TechVisual extends StatelessWidget {
       width: 150,
       height: 310,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF030303) : Colors.white,
+        color: isDark ? AppColors.darkBg : AppColors.white,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: app_color.withValues(alpha: 0.6), width: 2),
         boxShadow: [
@@ -176,7 +178,6 @@ class TechVisual extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          // Mobile Screen (Sliding App List)
           Positioned(
             left: 0,
             right: 0,
@@ -185,16 +186,13 @@ class TechVisual extends StatelessWidget {
               children: List.generate(12, (i) => _buildAppCard(i, isDark)),
             ),
           ),
-          // Hardware Notch
           Align(
             alignment: Alignment.topCenter,
             child: Container(
               width: 75,
               height: 22,
               decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1A1A1A)
-                    : const Color(0xFFE5E7EB),
+                color: isDark ? AppColors.darkCard : AppColors.lightBorder,
                 borderRadius: const BorderRadius.vertical(
                   bottom: Radius.circular(14),
                 ),
@@ -204,7 +202,7 @@ class TechVisual extends StatelessWidget {
                   width: 30,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.withValues(alpha: 0.3),
+                    color: AppColors.grey.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -234,30 +232,30 @@ class TechVisual extends StatelessWidget {
           : app_color.withValues(alpha: 0.04),
       child: Row(
         children: [
-          _dot(Colors.redAccent.withValues(alpha: 0.8)),
-          _dot(Colors.amberAccent.withValues(alpha: 0.8)),
-          _dot(Colors.greenAccent.withValues(alpha: 0.8)),
-          const SizedBox(width: 15),
+          _dot(AppColors.redAccent.withValues(alpha: 0.8)),
+          _dot(AppColors.amberAccent.withValues(alpha: 0.8)),
+          _dot(AppColors.greenAccent.withValues(alpha: 0.8)),
+          SizedBox(width: Get.width * 0.008),
           Expanded(
             child: Container(
               height: 16,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: isDark ? Colors.black : Colors.white,
+                color: isDark ? AppColors.black : AppColors.white,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: app_color.withValues(alpha: 0.1)),
               ),
               child: Text(
                 app_String,
                 style: TextStyle(
-                  fontSize: 8,
+                  fontSize: AppTextSizes.xs,
                   color: app_color.withValues(alpha: 0.6),
                   letterSpacing: 0.5,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: Get.width * 0.005),
           Icon(app_icon, size: 10, color: app_color.withValues(alpha: 0.3)),
         ],
       ),
@@ -285,19 +283,19 @@ class TechVisual extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-          const SizedBox(height: 25),
+          SizedBox(height: Get.width * 0.015),
           Row(
             children: [
               Expanded(child: _block(isDark, 100)),
-              const SizedBox(width: 15),
+              SizedBox(width: Get.width * 0.008),
               Expanded(child: _block(isDark, 100)),
             ],
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: Get.width * 0.008),
           _block(isDark, double.infinity),
-          const SizedBox(height: 10),
+          SizedBox(height: Get.width * 0.005),
           _block(isDark, 180),
-          const SizedBox(height: 30),
+          SizedBox(height: Get.width * 0.015),
           Center(
             child: Container(
               width: 110,
@@ -365,32 +363,35 @@ class TechVisual extends StatelessWidget {
             ),
             child: Icon(app_icon, size: 15, color: app_color),
           ),
-          const SizedBox(width: 10),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                app_String,
-                style: const TextStyle(
-                  color: app_color,
-                  fontSize: 8,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 1,
+          SizedBox(width: Get.width * 0.008),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  app_String,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: app_color,
+                    fontSize: AppTextSizes.xs,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                width: 25,
-                height: 6,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? app_color.withValues(alpha: 0.3)
-                      : app_color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(2),
+                SizedBox(height: Get.width * 0.004),
+                Container(
+                  width: 25,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? app_color.withValues(alpha: 0.3)
+                        : app_color.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -563,7 +564,7 @@ class TechLabelPainter extends CustomPainter {
         text: app_String,
         style: TextStyle(
           color: app_color,
-          fontSize: 8,
+          fontSize: AppTextSizes.xs,
           fontWeight: FontWeight.w900,
           letterSpacing: 0.8,
         ),

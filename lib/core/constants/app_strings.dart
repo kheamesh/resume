@@ -1,4 +1,45 @@
 class AppStrings {
+  // Profile
+  static const String name = "Kheamesh Soni";
+  static const String role = "Flutter Developer | Mobile & Web Application Developer";
+  static const String shortIntro = "Building scalable, beautiful and high-performance applications with Flutter.";
+  static const String aboutSummary = "I am a passionate Flutter Developer with a strong foundation in building cross-platform applications. My focus is on creating clean, intuitive user experiences and writing maintainable, high-quality code. I love solving complex problems and turning ideas into reality through technology.";
+  static const String email = "kheamesh.soni@example.com";
+  static const String github = "https://github.com/kheamesh";
+  static const String linkedin = "https://linkedin.com/in/kheamesh";
+  static const String location = "Bhopal, India";
+
+  // General & App Title
+  static const String appTitle = "Kheamesh Soni | Flutter Developer";
+
+  // PDF & Resume Constants
+  static const String viewResume = "VIEW RESUME";
+  static const String viewResumePdf = "View Resume PDF";
+  static const String viewResumePdfCaps = "VIEW RESUME PDF";
+  static const String downloadResume = "Download Resume";
+  static const String downloading = "DOWNLOADING...";
+  static const String resumePdfTitle = "Kheamesh Soni — Resume";
+  static const String resumePdfAsset = "assets/pdf/resume.pdf";
+  static const String resumeFileName = "Kheamesh_Soni_Resume.pdf";
+  static const String downloadSuccessful = "Download Successful";
+  static const String downloadFailed = "Download Failed";
+  static const String pdfAssetNotFound = "Resume PDF asset file not found";
+  static const String success = "Success";
+  static const String downloadBtnText = "Download";
+  static const String downloadingBtnText = "Downloading...";
+  static const String retry = "Retry";
+  static const String failedToLoadPdf = "Failed to load PDF file.";
+  static const String pagePrefix = "Page";
+  static const String ofPrefix = "of";
+  static const String close = "Close";
+  static const String zoomOut = "Zoom Out";
+  static const String zoomIn = "Zoom In";
+  static const String previousPage = "Previous Page";
+  static const String nextPage = "Next Page";
+  static const String downloadSuccessMessage = "Resume downloaded successfully as";
+  static const String downloadFailureMessage = "Could not download resume:";
+  static const String resumeDownloadMessage = "Resume downloaded as";
+
   // Hero Section
   static const String helloIm = "HELLO, I'M";
   static const String viewMyWork = "VIEW MY WORK";
@@ -21,6 +62,7 @@ class AppStrings {
   static const String featuredProjects = "Featured Projects";
   static const String featuredProjectSub = "FEATURED PROJECT";
   static const String viewCaseStudy = "VIEW CASE STUDY →";
+  static const String defaultCategoryApp = "App";
 
   // Skills Section
   static const String skillsAndTech = "SKILLS & TECHNOLOGIES";
@@ -51,6 +93,7 @@ class AppStrings {
   static const String navSkills = "Skills";
   static const String navServices = "Services";
   static const String navContact = "Contact";
+  static const String navResume = "RESUME";
 
   // Footer
   static const String designedAndBuilt = "Designed & Built with Flutter";

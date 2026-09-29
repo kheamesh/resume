@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/constants.dart';
 import '../../core/constants/app_strings.dart';
@@ -16,25 +18,32 @@ class ServicesSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: 100),
-      child: Column(
-        crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-        children: [
-          _buildHeader(context),
-          const SizedBox(height: 60),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: PortfolioData.services.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: ResponsiveLayout.isDesktop(context) ? 4 : (ResponsiveLayout.isTablet(context) ? 2 : 1),
-              crossAxisSpacing: 25,
-              mainAxisSpacing: 25,
-              childAspectRatio: isMobile ? 1.2 : 0.85,
-            ),
-            itemBuilder: (context, index) => _buildServiceCard(context, PortfolioData.services[index]),
+      padding: EdgeInsets.symmetric(horizontal: padding, vertical: Get.width * 0.05),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          child: Column(
+            crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              SizedBox(height: Get.width * 0.035),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: PortfolioData.services.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: ResponsiveLayout.isDesktop(context)
+                      ? 4
+                      : (ResponsiveLayout.isTablet(context) ? 2 : 1),
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 25,
+                  childAspectRatio: isMobile ? 1.2 : 0.85,
+                ),
+                itemBuilder: (context, index) => _buildServiceCard(context, PortfolioData.services[index]),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -44,20 +53,21 @@ class ServicesSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           AppStrings.services,
           style: TextStyle(
             color: AppColors.gold,
             fontWeight: FontWeight.w600,
             letterSpacing: 4,
+            fontSize: AppTextSizes.bodySmall,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: Get.width * 0.008),
         Text(
           AppStrings.servicesHeadline,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
-          style: const TextStyle(
-            fontSize: 42,
+          style: TextStyle(
+            fontSize: AppTextSizes.sectionHeadline,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -72,7 +82,7 @@ class ServicesSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.grey, width: 0.5),
+        border: Border.all(color: Theme.of(context).dividerTheme.color ?? AppColors.grey, width: 0.5),
       ),
       child: Column(
         crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
@@ -85,23 +95,23 @@ class ServicesSection extends StatelessWidget {
             ),
             child: Icon(service.icon, color: AppColors.gold, size: 30),
           ),
-          const SizedBox(height: 25),
+          SizedBox(height: Get.width * 0.015),
           Text(
             service.title,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: AppTextSizes.cardTitle,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).textTheme.titleLarge?.color,
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: Get.width * 0.01),
           Text(
             service.description,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: TextStyle(
               color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
-              fontSize: 15,
+              fontSize: AppTextSizes.bodyMedium,
               height: 1.6,
             ),
           ),

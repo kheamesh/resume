@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/constants.dart';
 import '../../core/responsive/responsive_layout.dart';
@@ -13,24 +15,38 @@ class AchievementsSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: 80),
-      child: ResponsiveLayout(
-        desktop: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: PortfolioData.achievements.map((ach) {
-            return _buildAchievement(context, ach['title']!, ach['value']!);
-          }).toList(),
-        ),
-        mobile: Wrap(
-          spacing: 20,
-          runSpacing: 40,
-          alignment: WrapAlignment.center,
-          children: PortfolioData.achievements.map((ach) {
-            return SizedBox(
-              width: 150,
-              child: _buildAchievement(context, ach['title']!, ach['value']!),
-            );
-          }).toList(),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: Get.width * 0.03,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.maxContentWidth,
+          ),
+          child: ResponsiveLayout(
+            desktop: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: PortfolioData.achievements.map((ach) {
+                return _buildAchievement(context, ach['title']!, ach['value']!);
+              }).toList(),
+            ),
+            mobile: Wrap(
+              spacing: 20,
+              runSpacing: 40,
+              alignment: WrapAlignment.center,
+              children: PortfolioData.achievements.map((ach) {
+                return SizedBox(
+                  width: 150,
+                  child: _buildAchievement(
+                    context,
+                    ach['title']!,
+                    ach['value']!,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
     );
@@ -41,17 +57,17 @@ class AchievementsSection extends StatelessWidget {
       children: [
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 48,
+          style: TextStyle(
+            fontSize: AppTextSizes.statValue,
             fontWeight: FontWeight.w900,
             color: AppColors.gold,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: Get.width * 0.008),
         Text(
           title.toUpperCase(),
           style: TextStyle(
-            fontSize: 12,
+            fontSize: AppTextSizes.caption,
             letterSpacing: 2,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
             fontWeight: FontWeight.bold,

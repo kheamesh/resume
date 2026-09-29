@@ -26,25 +26,30 @@ class HomeScreen extends StatelessWidget {
         child: Stack(
           children: [
             SingleChildScrollView(
-              child: Column(
-                children: [
-                  HeroSection(key: controller.heroKey),
-                  AboutSection(key: controller.aboutKey),
-                  const AchievementsSection(),
-                  ExperienceSection(key: controller.experienceKey),
-                  ProjectsSection(key: controller.projectsKey),
-                  SkillsSection(key: controller.skillsKey),
-                  const ProcessSection(),
-                  ServicesSection(key: controller.servicesKey),
-                  ContactSection(key: controller.contactKey),
-                  const FooterSection(),
-                ],
-              ),
+              physics: const ClampingScrollPhysics(),
+              child: section(controller),
             ),
-            Navbar(onNavTap: controller.onNavTap),
+            RepaintBoundary(child: Navbar(onNavTap: controller.onNavTap)),
           ],
         ),
       ),
     );
   }
+}
+
+Widget section(HomeController controller) {
+  return Column(
+    children: [
+      RepaintBoundary(child: HeroSection(key: controller.heroKey)),
+      RepaintBoundary(child: AboutSection(key: controller.aboutKey)),
+      const RepaintBoundary(child: AchievementsSection()),
+      RepaintBoundary(child: ExperienceSection(key: controller.experienceKey)),
+      RepaintBoundary(child: ProjectsSection(key: controller.projectsKey)),
+      RepaintBoundary(child: SkillsSection(key: controller.skillsKey)),
+      const RepaintBoundary(child: ProcessSection()),
+      RepaintBoundary(child: ServicesSection(key: controller.servicesKey)),
+      RepaintBoundary(child: ContactSection(key: controller.contactKey)),
+      const RepaintBoundary(child: FooterSection()),
+    ],
+  );
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../core/constants/app_icons.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/constants.dart';
 import '../../core/constants/app_strings.dart';
@@ -15,30 +17,43 @@ class ContactSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: 100),
-      color: Colors.transparent,
-      child: Column(
-        children: [
-          _buildHeader(),
-          const SizedBox(height: 80),
-          ResponsiveLayout(
-            desktop: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: _buildContactInfo(context)),
-                const SizedBox(width: 100),
-                Expanded(child: _buildContactForm(context)),
-              ],
-            ),
-            mobile: Column(
-              children: [
-                _buildContactInfo(context),
-                const SizedBox(height: 60),
-                _buildContactForm(context),
-              ],
-            ),
+      padding: EdgeInsets.symmetric(horizontal: padding, vertical: Get.width * 0.05),
+      color: AppColors.transparent,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          child: Column(
+            children: [
+              _buildHeader(),
+              SizedBox(height: Get.width * 0.04),
+              ResponsiveLayout(
+                desktop: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: _buildContactInfo(context)),
+                    SizedBox(width: Get.width * 0.025),
+                    Expanded(child: _buildContactForm(context)),
+                  ],
+                ),
+                tablet: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: _buildContactInfo(context)),
+                    SizedBox(width: Get.width * 0.025),
+                    Expanded(child: _buildContactForm(context)),
+                  ],
+                ),
+                mobile: Column(
+                  children: [
+                    _buildContactInfo(context),
+                    SizedBox(height: Get.width * 0.04),
+                    _buildContactForm(context),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -46,20 +61,21 @@ class ContactSection extends StatelessWidget {
   Widget _buildHeader() {
     return Column(
       children: [
-        const Text(
+        Text(
           AppStrings.contactMe,
           style: TextStyle(
             color: AppColors.gold,
             fontWeight: FontWeight.w600,
             letterSpacing: 4,
+            fontSize: AppTextSizes.bodySmall,
           ),
         ),
-        const SizedBox(height: 20),
-        const Text(
+        SizedBox(height: Get.width * 0.012),
+        Text(
           AppStrings.contactHeadline,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 42,
+            fontSize: AppTextSizes.sectionHeadline,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -75,11 +91,15 @@ class ContactSection extends StatelessWidget {
         Text(
           AppStrings.contactSub,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
-          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 18, height: 1.6),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: AppTextSizes.bodyLead,
+            height: 1.6,
+          ),
         ),
-        const SizedBox(height: 50),
+        SizedBox(height: Get.width * 0.03),
         _ContactItem(icon: AppIcons.email, label: AppStrings.labelEmail, value: PortfolioData.email),
-        const SizedBox(height: 30),
+        SizedBox(height: Get.width * 0.018),
         _ContactItem(icon: AppIcons.location, label: AppStrings.labelLocation, value: PortfolioData.location),
       ],
     );
@@ -91,27 +111,33 @@ class ContactSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.grey, width: 0.5),
+        border: Border.all(color: Theme.of(context).dividerTheme.color ?? AppColors.grey, width: 0.5),
       ),
       child: Column(
         children: [
           _buildTextField(context, AppStrings.labelName),
-          const SizedBox(height: 25),
+          SizedBox(height: Get.width * 0.015),
           _buildTextField(context, AppStrings.labelEmail),
-          const SizedBox(height: 25),
+          SizedBox(height: Get.width * 0.015),
           _buildTextField(context, AppStrings.labelMessage, maxLines: 5),
-          const SizedBox(height: 40),
+          SizedBox(height: Get.width * 0.02),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.gold,
-                foregroundColor: Colors.black,
+                foregroundColor: AppColors.black,
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: const Text(AppStrings.sendMessage, style: TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(
+                AppStrings.sendMessage,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppTextSizes.bodyMedium,
+                ),
+              ),
             ),
           ),
         ],
@@ -125,12 +151,19 @@ class ContactSection extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(color: Theme.of(context).textTheme.titleSmall?.color, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            color: Theme.of(context).textTheme.titleSmall?.color,
+            fontWeight: FontWeight.w500,
+            fontSize: AppTextSizes.bodySmall,
+          ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: Get.width * 0.008),
         TextField(
           maxLines: maxLines,
-          style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+            fontSize: AppTextSizes.bodyMedium,
+          ),
           decoration: InputDecoration(
             filled: true,
             fillColor: Theme.of(context).colorScheme.surface,
@@ -174,18 +207,25 @@ class _ContactItem extends StatelessWidget {
           ),
           child: Icon(icon, color: AppColors.gold),
         ),
-        const SizedBox(width: 25),
+        SizedBox(width: Get.width * 0.015),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               label,
-              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 14),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: AppTextSizes.bodySmall,
+              ),
             ),
-            const SizedBox(height: 5),
+            SizedBox(height: Get.width * 0.004),
             Text(
               value,
-              style: TextStyle(color: Theme.of(context).textTheme.titleLarge?.color, fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Theme.of(context).textTheme.titleLarge?.color,
+                fontSize: AppTextSizes.bodyLead,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ],
         ),

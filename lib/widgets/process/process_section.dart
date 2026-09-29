@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/constants.dart';
 import '../../core/constants/app_strings.dart';
@@ -15,42 +17,78 @@ class ProcessSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: 100),
-      color: Colors.transparent,
-      child: Column(
-        crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-        children: [
-          _buildHeader(context),
-          const SizedBox(height: 80),
-          ResponsiveLayout(
-            desktop: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: PortfolioData.processSteps.asMap().entries.map((entry) {
-                return Expanded(
-                  child: _buildProcessStep(
-                    context: context,
-                    index: entry.key + 1,
-                    title: entry.value['title']!,
-                    desc: entry.value['desc']!,
-                  ),
-                );
-              }).toList(),
-            ),
-            mobile: Column(
-              children: PortfolioData.processSteps.asMap().entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 40),
-                  child: _buildProcessStep(
-                    context: context,
-                    index: entry.key + 1,
-                    title: entry.value['title']!,
-                    desc: entry.value['desc']!,
-                  ),
-                );
-              }).toList(),
-            ),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: Get.width * 0.01,
+      ),
+      color: AppColors.transparent,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.maxContentWidth,
           ),
-        ],
+          child: Column(
+            crossAxisAlignment: isMobile
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              SizedBox(height: Get.width * 0.04),
+              ResponsiveLayout(
+                desktop: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: PortfolioData.processSteps.asMap().entries.map((
+                    entry,
+                  ) {
+                    return Expanded(
+                      child: _buildProcessStep(
+                        context: context,
+                        index: entry.key + 1,
+                        title: entry.value['title']!,
+                        desc: entry.value['desc']!,
+                      ),
+                    );
+                  }).toList(),
+                ),
+                tablet: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: PortfolioData.processSteps.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 30,
+                    childAspectRatio: 2.2,
+                  ),
+                  itemBuilder: (context, index) {
+                    final step = PortfolioData.processSteps[index];
+                    return _buildProcessStep(
+                      context: context,
+                      index: index + 1,
+                      title: step['title']!,
+                      desc: step['desc']!,
+                    );
+                  },
+                ),
+                mobile: Column(
+                  children: PortfolioData.processSteps.asMap().entries.map((
+                    entry,
+                  ) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: Get.width * 0.03),
+                      child: _buildProcessStep(
+                        context: context,
+                        index: entry.key + 1,
+                        title: entry.value['title']!,
+                        desc: entry.value['desc']!,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -58,22 +96,25 @@ class ProcessSection extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
     return Column(
-      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           AppStrings.howIWork,
           style: TextStyle(
             color: AppColors.gold,
             fontWeight: FontWeight.w600,
             letterSpacing: 4,
+            fontSize: AppTextSizes.bodySmall,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: Get.width * 0.008),
         Text(
           AppStrings.processHeadline,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
-          style: const TextStyle(
-            fontSize: 42,
+          style: TextStyle(
+            fontSize: AppTextSizes.sectionHeadline,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -81,38 +122,45 @@ class ProcessSection extends StatelessWidget {
     );
   }
 
-  Widget _buildProcessStep({required BuildContext context, required int index, required String title, required String desc}) {
+  Widget _buildProcessStep({
+    required BuildContext context,
+    required int index,
+    required String title,
+    required String desc,
+  }) {
     final isMobile = ResponsiveLayout.isMobile(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
-        crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment: isMobile
+            ? CrossAxisAlignment.center
+            : CrossAxisAlignment.start,
         children: [
           Text(
             "0$index",
             style: TextStyle(
-              fontSize: 48,
+              fontSize: AppTextSizes.numberHeading,
               fontWeight: FontWeight.w900,
               color: AppColors.gold.withValues(alpha: 0.1),
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: Get.width * 0.008),
           Text(
             title,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: AppTextSizes.cardTitle,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).textTheme.titleLarge?.color,
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: Get.width * 0.01),
           Text(
             desc,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontSize: 14,
+              fontSize: AppTextSizes.bodySmall,
               height: 1.6,
             ),
           ),

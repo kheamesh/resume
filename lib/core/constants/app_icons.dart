@@ -2,11 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AppIcons {
-  // Navigation
+  // Navigation & UI Controls
   static const IconData menu = Icons.menu;
   static const IconData themeLight = Icons.light_mode;
   static const IconData themeDark = Icons.dark_mode;
   static const IconData arrowForward = Icons.arrow_forward;
+  static const IconData close = Icons.close;
+  static const IconData checkCircle = Icons.check_circle_outline;
+  static const IconData errorOutline = Icons.error_outline;
+
+  // PDF & Downloads
+  static const IconData pdf = Icons.picture_as_pdf;
+  static const IconData download = Icons.download_rounded;
+  static const IconData zoomOut = Icons.zoom_out;
+  static const IconData zoomIn = Icons.zoom_in;
+  static const IconData navigatePrevious = Icons.navigate_before;
+  static const IconData navigateNext = Icons.navigate_next;
 
   // Socials & Identity
   static const IconData github = FontAwesomeIcons.github;

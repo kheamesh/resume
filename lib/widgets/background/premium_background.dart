@@ -21,69 +21,63 @@ class PremiumBackground extends StatelessWidget {
           Container(
             color: Theme.of(context).scaffoldBackgroundColor,
           ),
-          
-          // 2. Animated Mesh Gradients (Professional Blurs)
-          // For Dark Mode: Deep cosmic tones
-          if (isDark) ...[
-            _buildAnimatedGlow(
-              color: const Color(0xFF1A1033).withValues(alpha: 0.35), 
-              size: 900,
-              offset: const Offset(-0.4, -0.3),
-              animation: controller.animationController,
+
+          // 2. High-Performance Static Ambient Mesh Gradients
+          RepaintBoundary(
+            child: Stack(
+              children: [
+                if (isDark) ...[
+                  _buildAmbientGlow(
+                    color: AppColors.cosmicPurple.withValues(alpha: 0.35),
+                    size: 900,
+                    alignment: const Alignment(-0.8, -0.6),
+                  ),
+                  _buildAmbientGlow(
+                    color: AppColors.gold.withValues(alpha: 0.04),
+                    size: 700,
+                    alignment: const Alignment(0.8, 0.4),
+                  ),
+                  _buildAmbientGlow(
+                    color: AppColors.deepNavy.withValues(alpha: 0.25),
+                    size: 800,
+                    alignment: const Alignment(0.7, -0.7),
+                  ),
+                ],
+                if (!isDark) ...[
+                  _buildAmbientGlow(
+                    color: AppColors.warmSunlight.withValues(alpha: 0.7),
+                    size: 1200,
+                    alignment: const Alignment(0.9, -0.9),
+                  ),
+                  _buildAmbientGlow(
+                    color: AppColors.amberSunlight.withValues(alpha: 0.4),
+                    size: 800,
+                    alignment: const Alignment(0.5, -0.3),
+                  ),
+                  _buildAmbientGlow(
+                    color: AppColors.skyBlue.withValues(alpha: 0.5),
+                    size: 1000,
+                    alignment: const Alignment(-0.7, -0.5),
+                  ),
+                  _buildAmbientGlow(
+                    color: AppColors.gold.withValues(alpha: 0.05),
+                    size: 600,
+                    alignment: const Alignment(-0.3, 0.7),
+                  ),
+                ],
+              ],
             ),
-            _buildAnimatedGlow(
-              color: AppColors.gold.withValues(alpha: 0.04), 
-              size: 700,
-              offset: const Offset(0.6, 0.4),
-              animation: controller.animationController,
-              reverse: true,
-            ),
-            _buildAnimatedGlow(
-              color: const Color(0xFF001F3F).withValues(alpha: 0.25), 
-              size: 800,
-              offset: const Offset(0.7, -0.5),
-              animation: controller.animationController,
-            ),
-          ],
-          
-          // For Light Mode: Professional soft pastels with Sunlight
-          if (!isDark) ...[
-            // Primary Sunlight (Top Right)
-            _buildAnimatedGlow(
-              color: const Color(0xFFFFF7ED).withValues(alpha: 0.7), // Warm Sunlight
-              size: 1200,
-              offset: const Offset(0.8, -0.8),
-              animation: controller.animationController,
-            ),
-            // Secondary Sun Reflection
-            _buildAnimatedGlow(
-              color: const Color(0xFFFEF3C7).withValues(alpha: 0.4), // Amber Sun Light
-              size: 800,
-              offset: const Offset(0.4, -0.4),
-              animation: controller.animationController,
-              reverse: true,
-            ),
-            _buildAnimatedGlow(
-              color: const Color(0xFFE0F2FE).withValues(alpha: 0.5), // Soft Sky Blue
-              size: 1000,
-              offset: const Offset(-0.5, -0.4),
-              animation: controller.animationController,
-            ),
-            _buildAnimatedGlow(
-              color: AppColors.gold.withValues(alpha: 0.05), 
-              size: 600,
-              offset: const Offset(-0.2, 0.6),
-              animation: controller.animationController,
-            ),
-          ],
+          ),
 
           // 3. Technical Grid Pattern
           Positioned.fill(
-            child: CustomPaint(
-              painter: TechnicalGridPainter(
-                gridColor: isDark 
-                    ? Colors.white.withValues(alpha: 0.015) 
-                    : Colors.black.withValues(alpha: 0.01),
+            child: RepaintBoundary(
+              child: CustomPaint(
+                painter: TechnicalGridPainter(
+                  gridColor: isDark
+                      ? AppColors.white.withValues(alpha: 0.015)
+                      : AppColors.black.withValues(alpha: 0.01),
+                ),
               ),
             ),
           ),
@@ -92,125 +86,117 @@ class PremiumBackground extends StatelessWidget {
           if (isDark)
             Positioned.fill(
               child: IgnorePointer(
+                child: RepaintBoundary(
+                  child: AnimatedBuilder(
+                    animation: controller.animationController,
+                    builder: (context, child) {
+                      return CustomPaint(
+                        painter: StarfieldPainter(
+                          progress: controller.animationController.value,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
+
+          // 5. Floating Geometric Shapes
+          Positioned.fill(
+            child: IgnorePointer(
+              child: RepaintBoundary(
                 child: AnimatedBuilder(
                   animation: controller.animationController,
                   builder: (context, child) {
                     return CustomPaint(
-                      painter: StarfieldPainter(
+                      painter: GeometricPainter(
                         progress: controller.animationController.value,
+                        color: isDark
+                            ? AppColors.white.withValues(alpha: 0.02)
+                            : AppColors.black.withValues(alpha: 0.01),
                       ),
                     );
                   },
                 ),
               ),
             ),
-
-          // 5. Floating Geometric Shapes (Very subtle)
-          Positioned.fill(
-            child: IgnorePointer(
-              child: AnimatedBuilder(
-                animation: controller.animationController,
-                builder: (context, child) {
-                  return CustomPaint(
-                    painter: GeometricPainter(
-                      progress: controller.animationController.value,
-                      color: isDark ? Colors.white.withValues(alpha: 0.02) : Colors.black.withValues(alpha: 0.01),
-                    ),
-                  );
-                },
-              ),
-            ),
           ),
 
-          // 5. Interactive Mouse Tracker (Soft Halo)
-          Obx(() => controller.mousePos.value == Offset.zero 
-            ? const SizedBox.shrink()
-            : Positioned(
-              left: controller.mousePos.value.dx - 400,
-              top: controller.mousePos.value.dy - 400,
-              child: IgnorePointer(
-                child: Container(
-                  width: 800,
-                  height: 800,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: RadialGradient(
-                      colors: [
-                        isDark 
-                            ? AppColors.gold.withValues(alpha: 0.025) 
-                            : const Color(0xFFFDE68A).withValues(alpha: 0.1), // Warm Sunlight halo
-                        Colors.transparent,
-                      ],
+          // 6. Interactive Mouse Tracker (Isolated in RepaintBoundary)
+          Obx(() => controller.mousePos.value == Offset.zero
+              ? const SizedBox.shrink()
+              : Positioned(
+                  left: controller.mousePos.value.dx - 400,
+                  top: controller.mousePos.value.dy - 400,
+                  child: RepaintBoundary(
+                    child: IgnorePointer(
+                      child: Container(
+                        width: 800,
+                        height: 800,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              isDark
+                                  ? AppColors.gold.withValues(alpha: 0.025)
+                                  : AppColors.sunHalo.withValues(alpha: 0.1),
+                              AppColors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            )),
+                )),
 
-          // 6. Subtle Texture Overlay (Simplified to avoid network issues)
+          // 7. Subtle Vignette Overlay
           Positioned.fill(
             child: IgnorePointer(
               child: Container(
-                color: isDark ? Colors.white.withValues(alpha: 0.01) : Colors.black.withValues(alpha: 0.005),
-              ),
-            ),
-          ),
-
-          // 7. Vignette for Focus
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    Colors.transparent,
-                    isDark ? Colors.black.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.03),
-                  ],
-                  stops: const [0.7, 1.0],
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [
+                      AppColors.transparent,
+                      isDark
+                          ? AppColors.black.withValues(alpha: 0.3)
+                          : AppColors.black.withValues(alpha: 0.03),
+                    ],
+                    stops: const [0.7, 1.0],
+                  ),
                 ),
               ),
             ),
           ),
-          
+
           // 8. Content
-          child,
+          RepaintBoundary(child: child),
         ],
       ),
     );
   }
 
-  Widget _buildAnimatedGlow({
+  Widget _buildAmbientGlow({
     required Color color,
     required double size,
-    required Offset offset,
-    required Animation<double> animation,
-    bool reverse = false,
+    required Alignment alignment,
   }) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, child) {
-        final angle = reverse ? -animation.value * 2 * pi : animation.value * 2 * pi;
-        final x = offset.dx + 0.1 * cos(angle);
-        final y = offset.dy + 0.1 * sin(angle);
-
-        return Align(
-          alignment: Alignment(x, y),
-          child: IgnorePointer(
-            child: Container(
-              width: size,
-              height: size,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [
-                    color,
-                    color.withValues(alpha: 0),
-                  ],
-                ),
-              ),
+    return Align(
+      alignment: alignment,
+      child: IgnorePointer(
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              colors: [
+                color,
+                color.withValues(alpha: 0),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
@@ -265,11 +251,11 @@ class GeometricPainter extends CustomPainter {
     for (var s in _shapes) {
       final x = s.pos.dx * size.width;
       final y = (s.pos.dy * size.height + (progress * 50)) % size.height;
-      
+
       canvas.save();
       canvas.translate(x, y);
       canvas.rotate(s.rotation + progress * pi);
-      
+
       if (s.type == 0) {
         canvas.drawRect(Rect.fromCenter(center: Offset.zero, width: s.size, height: s.size), paint);
       } else if (s.type == 1) {
@@ -311,11 +297,10 @@ class StarfieldPainter extends CustomPainter {
     for (var s in _stars) {
       final x = s.pos.dx * size.width;
       final y = s.pos.dy * size.height;
-      
-      // Calculate twinkling opacity
+
       final opacity = 0.1 + 0.6 * (0.5 + 0.5 * sin(progress * 2 * pi * s.twinkleSpeed));
-      
-      paint.color = Colors.white.withValues(alpha: opacity);
+
+      paint.color = AppColors.white.withValues(alpha: opacity);
       canvas.drawCircle(Offset(x, y), s.size, paint);
     }
   }

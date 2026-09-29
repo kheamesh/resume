@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/app_icons.dart';
 import '../../core/constants/constants.dart';
@@ -23,31 +24,34 @@ class SkillsSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: 100),
-      color: Colors.transparent,
-      child: Column(
-        crossAxisAlignment: isMobile
-            ? CrossAxisAlignment.center
-            : CrossAxisAlignment.start,
-        children: [
-          FadeInDown(
-            duration: const Duration(milliseconds: 800),
-            child: _buildHeader(context),
-          ),
-          const SizedBox(height: 80),
+      padding: EdgeInsets.symmetric(horizontal: padding, vertical: Get.width * 0.02),
+      color: AppColors.transparent,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          child: Column(
+            crossAxisAlignment: isMobile
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
+            children: [
+              FadeInDown(
+                duration: const Duration(milliseconds: 800),
+                child: _buildHeader(context),
+              ),
+              SizedBox(height: Get.width * 0.015),
 
-          if (isMobile)
-            _buildMobileLayout(context)
-          else
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                // Decorative Rings Background
-                // _buildDecorativeRings(controller.animationController),
-                _buildDesktopLayout(context, controller.animationController),
-              ],
-            ),
-        ],
+              if (isMobile)
+                _buildMobileLayout(context)
+              else
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    _buildDesktopLayout(context, controller.animationController),
+                  ],
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -63,11 +67,11 @@ class SkillsSection extends StatelessWidget {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: PortfolioData.skillCategories.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ResponsiveLayout.isTablet(context) ? 1 : 2,
             crossAxisSpacing: 30,
             mainAxisSpacing: 30,
-            childAspectRatio: 4.2,
+            childAspectRatio: ResponsiveLayout.isTablet(context) ? 3.5 : 4.2,
           ),
           itemBuilder: (context, index) {
             final category = PortfolioData.skillCategories[index];
@@ -99,7 +103,7 @@ class SkillsSection extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: PortfolioData.skillCategories.length,
       itemBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.only(bottom: 40),
+        padding: EdgeInsets.only(bottom: Get.width * 0.03),
         child: FadeInUp(
           duration: const Duration(milliseconds: 800),
           delay: Duration(milliseconds: index * 100),
@@ -120,15 +124,16 @@ class SkillsSection extends StatelessWidget {
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           AppStrings.skillsAndTech,
           style: TextStyle(
             color: app_color,
             fontWeight: FontWeight.w600,
             letterSpacing: 4,
+            fontSize: AppTextSizes.bodySmall,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: Get.width * 0.008),
         Container(width: 50, height: 2, color: app_color),
       ],
     );
@@ -150,7 +155,7 @@ class SkillsSection extends StatelessWidget {
             width: ResponsiveLayout.isMobile(context) ? double.infinity : 500,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF050505) : Colors.white,
+              color: isDark ? AppColors.darkSurface : AppColors.white,
               borderRadius: BorderRadius.circular(24),
               border: Border.all(
                 color: controller.isHovered
@@ -187,11 +192,11 @@ class SkillsSection extends StatelessWidget {
                         size: 24,
                       ),
                     ),
-                    const SizedBox(width: 20),
+                    SizedBox(width: Get.width * 0.015),
                     Text(
                       category.title,
                       style: TextStyle(
-                        fontSize: 24,
+                        fontSize: AppTextSizes.cardTitle,
                         fontWeight: FontWeight.w900,
                         color: Theme.of(context).textTheme.titleLarge?.color,
                         letterSpacing: 1,
@@ -199,7 +204,7 @@ class SkillsSection extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: Get.width * 0.015),
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
@@ -245,11 +250,11 @@ class SkillsSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark
             ? (parentHovered
-                  ? const Color(0xFF151515)
-                  : const Color(0xFF101010))
+                  ? AppColors.darkHoverCard
+                  : AppColors.darkCardAlt)
             : (parentHovered
-                  ? const Color(0xFFF1F5F9)
-                  : const Color(0xFFF8FAFC)),
+                  ? AppColors.lightHoverCard
+                  : AppColors.lightBg),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: parentHovered
@@ -262,11 +267,11 @@ class SkillsSection extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (app_icon != null) Icon(app_icon, size: 18, color: brandColor),
-          const SizedBox(width: 10),
+          SizedBox(width: Get.width * 0.008),
           Text(
             skill.name,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: AppTextSizes.bodySmall,
               fontWeight: FontWeight.w600,
               color: Theme.of(
                 context,
@@ -284,13 +289,13 @@ Color _getBrandColor(String name) {
   if (name.contains("flutter")) return Colors.blue;
   if (name.contains("dart")) return Colors.blueAccent;
   if (name.contains("android")) return Colors.green;
-  if (name.contains("ios")) return Colors.grey;
+  if (name.contains("ios")) return AppColors.grey;
   if (name.contains("getx")) return Colors.deepPurpleAccent;
   if (name.contains("provider")) return Colors.blue;
   if (name.contains("riverpod")) return Colors.lightBlue;
   if (name.contains("firebase")) return Colors.orangeAccent;
   if (name.contains("api") || name.contains("dio")) return Colors.orange;
-  if (name.contains("auth")) return Colors.redAccent;
+  if (name.contains("auth")) return AppColors.redAccent;
   if (name.contains("git")) return const Color(0xFFF05032);
   if (name.contains("figma")) return Colors.purple;
   if (name.contains("postman")) return Colors.orange;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_icons.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/constants.dart';
 import '../../core/constants/app_strings.dart';
@@ -20,29 +21,43 @@ class ProjectsSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: 100),
-      child: Column(
-        crossAxisAlignment: isMobile
-            ? CrossAxisAlignment.center
-            : CrossAxisAlignment.start,
-        children: [
-          _buildHeader(context),
-          const SizedBox(height: 40),
-          _buildFilters(context, controller),
-          const SizedBox(height: 60),
-          Obx(
-            () => _buildFeaturedProjects(
-              controller.filteredProjects.where((p) => p.isFeatured).toList(),
-            ),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: Get.width * 0.01,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.maxContentWidth,
           ),
-          const SizedBox(height: 60),
-          Obx(
-            () => _buildProjectGrid(
-              context,
-              controller.filteredProjects.where((p) => !p.isFeatured).toList(),
-            ),
+          child: Column(
+            crossAxisAlignment: isMobile
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              SizedBox(height: Get.width * 0.02),
+              _buildFilters(context, controller),
+              SizedBox(height: Get.width * 0.03),
+              Obx(
+                () => _buildFeaturedProjects(
+                  controller.filteredProjects
+                      .where((p) => p.isFeatured)
+                      .toList(),
+                ),
+              ),
+              SizedBox(height: Get.width * 0.03),
+              Obx(
+                () => _buildProjectGrid(
+                  context,
+                  controller.filteredProjects
+                      .where((p) => !p.isFeatured)
+                      .toList(),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -54,19 +69,23 @@ class ProjectsSection extends StatelessWidget {
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           AppStrings.portfolio,
           style: TextStyle(
             color: AppColors.gold,
             fontWeight: FontWeight.w600,
             letterSpacing: 4,
+            fontSize: AppTextSizes.bodySmall,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: Get.width * 0.008),
         Text(
           AppStrings.featuredProjects,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
-          style: const TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: AppTextSizes.sectionHeadline,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );
@@ -82,17 +101,20 @@ class ProjectsSection extends StatelessWidget {
         return Obx(() {
           bool isSelected = controller.selectedCategory.value == cat;
           return ChoiceChip(
-            label: Text(cat),
+            label: Text(
+              cat,
+              style: TextStyle(
+                fontSize: AppTextSizes.bodySmall,
+                color: isSelected
+                    ? AppColors.black
+                    : Theme.of(context).textTheme.bodyMedium?.color,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
             selected: isSelected,
             onSelected: (val) => controller.setCategory(cat),
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppColors.transparent,
             selectedColor: AppColors.gold,
-            labelStyle: TextStyle(
-              color: isSelected
-                  ? Colors.black
-                  : Theme.of(context).textTheme.bodyMedium?.color,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
               side: BorderSide(
@@ -113,7 +135,7 @@ class ProjectsSection extends StatelessWidget {
       children: projects
           .map(
             (project) => Padding(
-              padding: const EdgeInsets.only(bottom: 60),
+              padding: EdgeInsets.only(bottom: Get.width * 0.035),
               child: FadeInUp(child: _FeaturedProjectCard(project: project)),
             ),
           )
@@ -130,7 +152,7 @@ class ProjectsSection extends StatelessWidget {
         crossAxisCount: ResponsiveLayout.isDesktop(context)
             ? 3
             : (ResponsiveLayout.isTablet(context) ? 2 : 1),
-        crossAxisSpacing: 30,
+        crossAxisSpacing: 20,
         mainAxisSpacing: 30,
         childAspectRatio: 0.8,
       ),
@@ -151,15 +173,13 @@ class _FeaturedProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ResponsiveLayout.isDesktop(context);
-
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: Theme.of(context).dividerTheme.color ?? Colors.grey,
+          color: Theme.of(context).dividerTheme.color ?? AppColors.grey,
           width: 0.5,
         ),
       ),
@@ -200,35 +220,35 @@ class _FeaturedProjectCard extends StatelessWidget {
             ? CrossAxisAlignment.center
             : CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             AppStrings.featuredProjectSub,
             style: TextStyle(
               color: AppColors.gold,
               letterSpacing: 2,
-              fontSize: 12,
+              fontSize: AppTextSizes.caption,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: Get.width * 0.012),
           Text(
             project.name,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: TextStyle(
-              fontSize: 32,
+              fontSize: AppTextSizes.sectionHeadline,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).textTheme.displayLarge?.color,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: Get.width * 0.012),
           Text(
             project.description,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontSize: 16,
+              fontSize: AppTextSizes.bodyMedium,
               height: 1.6,
             ),
           ),
-          const SizedBox(height: 30),
+          SizedBox(height: Get.width * 0.018),
           Wrap(
             spacing: 10,
             alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
@@ -236,15 +256,15 @@ class _FeaturedProjectCard extends StatelessWidget {
                 .map(
                   (tech) => Text(
                     "#$tech",
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.goldAccent,
-                      fontSize: 14,
+                      fontSize: AppTextSizes.bodySmall,
                     ),
                   ),
                 )
                 .toList(),
           ),
-          const SizedBox(height: 40),
+          SizedBox(height: Get.width * 0.02),
           Row(
             mainAxisAlignment: isMobile
                 ? MainAxisAlignment.center
@@ -257,11 +277,12 @@ class _FeaturedProjectCard extends StatelessWidget {
               if (!isMobile) const Spacer(),
               TextButton(
                 onPressed: () {},
-                child: const Text(
+                child: Text(
                   AppStrings.viewCaseStudy,
                   style: TextStyle(
                     color: AppColors.gold,
                     fontWeight: FontWeight.bold,
+                    fontSize: AppTextSizes.bodySmall,
                   ),
                 ),
               ),
@@ -297,7 +318,7 @@ class _ProjectGridCard extends StatelessWidget {
             border: Border.all(
               color: hoverController.isHovered.value
                   ? AppColors.gold
-                  : (Theme.of(context).dividerTheme.color ?? Colors.grey),
+                  : (Theme.of(context).dividerTheme.color ?? AppColors.grey),
               width: 0.5,
             ),
             boxShadow: hoverController.isHovered.value
@@ -333,31 +354,31 @@ class _ProjectGridCard extends StatelessWidget {
                     Text(
                       project.name,
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: AppTextSizes.cardTitle,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).textTheme.titleLarge?.color,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: Get.width * 0.008),
                     Text(
                       project.description,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: 14,
+                        fontSize: AppTextSizes.bodySmall,
                         height: 1.5,
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    SizedBox(height: Get.width * 0.015),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           project.category ?? "App",
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.gold,
-                            fontSize: 12,
+                            fontSize: AppTextSizes.caption,
                           ),
                         ),
                         const Icon(

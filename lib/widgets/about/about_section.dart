@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../core/constants/app_icons.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/constants/constants.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/responsive/responsive_layout.dart';
 import '../../data/portfolio_data.dart';
+import '../../controllers/pdf_controller.dart';
 
 class AboutSection extends StatelessWidget {
   const AboutSection({super.key});
@@ -15,32 +19,40 @@ class AboutSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: 100),
-      child: Column(
-        crossAxisAlignment: isMobile
-            ? CrossAxisAlignment.center
-            : CrossAxisAlignment.start,
-        children: [
-          _buildHeader(context),
-          const SizedBox(height: 60),
-          ResponsiveLayout(
-            desktop: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(flex: 3, child: _buildContent(context)),
-                const SizedBox(width: 80),
-                Expanded(flex: 2, child: _buildStats(context)),
-              ],
-            ),
-            mobile: Column(
-              children: [
-                _buildContent(context),
-                const SizedBox(height: 60),
-                _buildStats(context),
-              ],
-            ),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: Get.width * 0.01,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          child: Column(
+            crossAxisAlignment: isMobile
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              SizedBox(height: Get.width * 0.02),
+              ResponsiveLayout(
+                desktop: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(flex: 3, child: _buildContent(context)),
+                    SizedBox(width: Get.width * 0.025),
+                    Expanded(flex: 2, child: _buildStats(context)),
+                  ],
+                ),
+                mobile: Column(
+                  children: [
+                    _buildContent(context),
+                    SizedBox(height: Get.width * 0.05),
+                    _buildStats(context),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -52,15 +64,16 @@ class AboutSection extends StatelessWidget {
           ? CrossAxisAlignment.center
           : CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           AppStrings.aboutMe,
           style: TextStyle(
             color: AppColors.gold,
             fontWeight: FontWeight.w600,
             letterSpacing: 4,
+            fontSize: AppTextSizes.bodySmall,
           ),
         ),
-        const SizedBox(height: 10),
+        SizedBox(height: Get.width * 0.008),
         Container(width: 50, height: 2, color: AppColors.gold),
       ],
     );
@@ -77,30 +90,82 @@ class AboutSection extends StatelessWidget {
           AppStrings.aboutHeadline,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
           style: TextStyle(
-            fontSize: 32,
+            fontSize: AppTextSizes.sectionHeadline,
             fontWeight: FontWeight.bold,
             color: Theme.of(context).textTheme.displayLarge?.color,
           ),
         ),
-        const SizedBox(height: 30),
+        SizedBox(height: Get.width * 0.02),
         Text(
           PortfolioData.aboutSummary,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: AppTextSizes.bodyLead,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
             height: 1.8,
           ),
         ),
-        const SizedBox(height: 30),
+        SizedBox(height: Get.width * 0.02),
         Text(
           AppStrings.aboutPhilosophy,
           textAlign: isMobile ? TextAlign.center : TextAlign.start,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: AppTextSizes.bodyLead,
             color: Theme.of(context).colorScheme.onSurfaceVariant,
             height: 1.8,
           ),
+        ),
+        SizedBox(height: Get.width * 0.02),
+        Wrap(
+          spacing: 16,
+          runSpacing: 12,
+          alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () => Get.find<PdfController>().showPdf(),
+              icon: const Icon(AppIcons.pdf, size: 18),
+              label: Text(
+                AppStrings.viewResumePdfCaps,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppTextSizes.bodySmall,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.gold,
+                foregroundColor: AppColors.black,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 18,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            OutlinedButton.icon(
+              onPressed: () => Get.find<PdfController>().downloadPdf(),
+              icon: const Icon(AppIcons.download, size: 18),
+              label: Text(
+                AppStrings.downloadCv,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppTextSizes.bodySmall,
+                ),
+              ),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+                side: const BorderSide(color: AppColors.gold),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 18,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -149,7 +214,7 @@ class _StatCard extends StatelessWidget {
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).dividerTheme.color ?? Colors.grey,
+          color: Theme.of(context).dividerTheme.color ?? AppColors.grey,
           width: 0.5,
         ),
       ),
@@ -157,18 +222,18 @@ class _StatCard extends StatelessWidget {
         children: [
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 36,
+            style: TextStyle(
+              fontSize: AppTextSizes.statValue,
               fontWeight: FontWeight.w900,
               color: AppColors.gold,
             ),
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: Get.width * 0.008),
           Text(
             label.toUpperCase(),
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: AppTextSizes.caption,
               letterSpacing: 1,
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),

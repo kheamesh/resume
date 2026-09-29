@@ -1,12 +1,14 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_icons.dart';
+import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/responsive/responsive_layout.dart';
+import '../../core/constants/constants.dart';
 import '../../core/constants/app_strings.dart';
 import '../../data/portfolio_data.dart';
 import '../../controllers/theme_controller.dart';
+import '../../controllers/pdf_controller.dart';
 
 class Navbar extends StatelessWidget {
   final Function(int) onNavTap;
@@ -28,21 +30,21 @@ class Navbar extends StatelessWidget {
       top: 0,
       left: 0,
       right: 0,
-      child: ClipRRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            height: 80,
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.8),
-              border: Border(
-                bottom: BorderSide(
-                  color: Theme.of(context).dividerTheme.color ?? Colors.grey.withValues(alpha: 0.2),
-                  width: 0.5,
-                ),
-              ),
+      child: Container(
+        height: 80,
+        padding: EdgeInsets.symmetric(horizontal: AppConstants.getPadding(context)),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.95),
+          border: Border(
+            bottom: BorderSide(
+              color: Theme.of(context).dividerTheme.color ?? AppColors.grey.withValues(alpha: 0.2),
+              width: 0.5,
             ),
+          ),
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -58,7 +60,7 @@ class Navbar extends StatelessWidget {
                             child: _buildDesktopNav(context),
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        SizedBox(width: Get.width * 0.012),
                         _buildThemeToggle(),
                       ],
                     ),
@@ -92,9 +94,9 @@ class Navbar extends StatelessWidget {
   Widget _buildLogo() {
     return Text(
       PortfolioData.name.toUpperCase(),
-      style: const TextStyle(
+      style: TextStyle(
         fontWeight: FontWeight.w900,
-        fontSize: 20,
+        fontSize: AppTextSizes.logo,
         letterSpacing: 2,
         color: AppColors.gold,
       ),
@@ -102,25 +104,46 @@ class Navbar extends StatelessWidget {
   }
 
   Widget _buildDesktopNav(BuildContext context) {
+    final pdfController = Get.find<PdfController>();
     return Row(
-      children: List.generate(_navItems.length, (index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: TextButton(
-            onPressed: () => onNavTap(index),
-            style: TextButton.styleFrom(
-              foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
-            ),
-            child: Text(
-              _navItems[index],
-              style: const TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
+      children: [
+        ...List.generate(_navItems.length, (index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: TextButton(
+              onPressed: () => onNavTap(index),
+              style: TextButton.styleFrom(
+                foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+              child: Text(
+                _navItems[index],
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: AppTextSizes.navItem,
+                ),
               ),
             ),
+          );
+        }),
+        SizedBox(width: Get.width * 0.005),
+        OutlinedButton.icon(
+          onPressed: () => pdfController.showPdf(),
+          icon: const Icon(AppIcons.pdf, size: 16, color: AppColors.gold),
+          label: Text(
+            AppStrings.navResume,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: AppTextSizes.bodySmall - 1,
+              color: AppColors.gold,
+            ),
           ),
-        );
-      }),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: AppColors.gold, width: 1),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          ),
+        ),
+      ],
     );
   }
 
@@ -132,6 +155,7 @@ class Navbar extends StatelessWidget {
   }
 
   void _showMobileMenu(BuildContext context) {
+    final pdfController = Get.find<PdfController>();
     Get.bottomSheet(
       Container(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -141,19 +165,55 @@ class Navbar extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: List.generate(_navItems.length, (index) {
-            return ListTile(
+          children: [
+            ...List.generate(_navItems.length, (index) {
+              return ListTile(
+                title: Text(
+                  _navItems[index],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                    fontSize: AppTextSizes.bodyMedium,
+                  ),
+                ),
+                onTap: () {
+                  Get.back();
+                  onNavTap(index);
+                },
+              );
+            }),
+            const Divider(),
+            ListTile(
+              leading: const Icon(AppIcons.pdf, color: AppColors.gold),
               title: Text(
-                _navItems[index],
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+                AppStrings.viewResumePdf,
+                style: TextStyle(
+                  color: AppColors.gold,
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppTextSizes.bodyMedium,
+                ),
               ),
               onTap: () {
                 Get.back();
-                onNavTap(index);
+                pdfController.showPdf();
               },
-            );
-          }),
+            ),
+            ListTile(
+              leading: const Icon(AppIcons.download, color: AppColors.gold),
+              title: Text(
+                AppStrings.downloadResume,
+                style: TextStyle(
+                  color: AppColors.gold,
+                  fontWeight: FontWeight.bold,
+                  fontSize: AppTextSizes.bodyMedium,
+                ),
+              ),
+              onTap: () {
+                Get.back();
+                pdfController.downloadPdf();
+              },
+            ),
+          ],
         ),
       ),
     );

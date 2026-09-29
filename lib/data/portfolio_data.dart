@@ -4,12 +4,14 @@ import '../models/experience.dart';
 import '../models/skill.dart';
 import '../models/service.dart';
 
+import '../core/constants/app_strings.dart';
+
 class PortfolioData {
-  static const String name = "Kheamesh Soni";
-  static const String role = "Flutter Developer | Mobile & Web Application Developer";
-  static const String shortIntro = "Building scalable, beautiful and high-performance applications with Flutter.";
-  static const String aboutSummary = "I am a passionate Flutter Developer with a strong foundation in building cross-platform applications. My focus is on creating clean, intuitive user experiences and writing maintainable, high-quality code. I love solving complex problems and turning ideas into reality through technology.";
-  
+  static const String name = AppStrings.name;
+  static const String role = AppStrings.role;
+  static const String shortIntro = AppStrings.shortIntro;
+  static const String aboutSummary = AppStrings.aboutSummary;
+
   static const String experienceYears = "2+";
   static const String projectsCompleted = "15+";
   static const String technologiesCount = "10+";
@@ -172,8 +174,8 @@ class PortfolioData {
     {"title": "Happy Clients", "value": "20+"},
   ];
 
-  static const String email = "kheamesh.soni@example.com";
-  static const String github = "https://github.com/kheamesh";
-  static const String linkedin = "https://linkedin.com/in/kheamesh";
-  static const String location = "Bhopal, India";
+  static const String email = AppStrings.email;
+  static const String github = AppStrings.github;
+  static const String linkedin = AppStrings.linkedin;
+  static const String location = AppStrings.location;
 }

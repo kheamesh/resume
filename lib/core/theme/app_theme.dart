@@ -22,7 +22,7 @@ class AppTheme {
         Theme.of(context).textTheme,
       ).apply(bodyColor: AppColors.darkText, displayColor: AppColors.darkText),
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: AppColors.darkText),
       ),
@@ -60,7 +60,7 @@ class AppTheme {
             displayColor: AppColors.lightText,
           ),
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         elevation: 0,
         iconTheme: IconThemeData(color: AppColors.lightText),
       ),
