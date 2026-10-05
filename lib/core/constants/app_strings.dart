@@ -84,6 +84,15 @@ class AppStrings {
   static const String labelEmail = "Email";
   static const String labelMessage = "Message";
   static const String labelLocation = "Location";
+  static const String requiredField = "Required Field";
+  static const String enterNameError = "Please enter your name.";
+  static const String invalidEmailTitle = "Invalid Email";
+  static const String enterValidEmailError = "Please enter a valid email address.";
+  static const String enterMessageError = "Please enter your message.";
+  static const String contactSuccessMessage = "Thank you! Your message has been sent successfully.";
+  static const String submissionErrorTitle = "Submission Error";
+  static const String permissionDeniedError = "Permission Denied: Please set Firestore Security Rules to allow writes.";
+  static const String invalidApiKeyError = "Invalid API Key: Please update apiKey in firebase_options.dart with your real Firebase API Key.";
 
   // Navbar
   static const String navHome = "Home";

@@ -29,7 +29,7 @@ class HomeScreen extends StatelessWidget {
               physics: const ClampingScrollPhysics(),
               child: section(controller),
             ),
-            RepaintBoundary(child: Navbar(onNavTap: controller.onNavTap)),
+            Navbar(onNavTap: controller.onNavTap),
           ],
         ),
       ),

@@ -30,24 +30,25 @@ class Navbar extends StatelessWidget {
       top: 0,
       left: 0,
       right: 0,
-      child: Container(
-        height: 80,
-        padding: EdgeInsets.symmetric(horizontal: AppConstants.getPadding(context)),
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.95),
-          border: Border(
-            bottom: BorderSide(
-              color: Theme.of(context).dividerTheme.color ?? AppColors.grey.withValues(alpha: 0.2),
-              width: 0.5,
+      child: RepaintBoundary(
+        child: Container(
+          height: 80,
+          padding: EdgeInsets.symmetric(horizontal: AppConstants.getPadding(context)),
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.95),
+            border: Border(
+              bottom: BorderSide(
+                color: Theme.of(context).dividerTheme.color ?? AppColors.grey.withValues(alpha: 0.2),
+                width: 0.5,
+              ),
             ),
           ),
-        ),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                 _buildLogo(),
                 if (ResponsiveLayout.isDesktop(context))
                   Flexible(
@@ -77,6 +78,7 @@ class Navbar extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 

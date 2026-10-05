@@ -44,6 +44,7 @@ class AppColors {
   static const Color redAccent = Colors.redAccent;
   static const Color amberAccent = Colors.amberAccent;
   static const Color greenAccent = Colors.greenAccent;
+  static const Color green = Colors.green;
 
   // --- Gradients ---
   static const LinearGradient goldGradient = LinearGradient(

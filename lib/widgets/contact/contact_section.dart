@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../controllers/contact_controller.dart';
 import '../../core/constants/app_icons.dart';
 import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
@@ -17,11 +18,16 @@ class ContactSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: Get.width * 0.05),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: Get.width * 0.05,
+      ),
       color: AppColors.transparent,
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.maxContentWidth,
+          ),
           child: Column(
             children: [
               _buildHeader(),
@@ -86,7 +92,9 @@ class ContactSection extends StatelessWidget {
   Widget _buildContactInfo(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
     return Column(
-      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         Text(
           AppStrings.contactSub,
@@ -98,54 +106,106 @@ class ContactSection extends StatelessWidget {
           ),
         ),
         SizedBox(height: Get.width * 0.03),
-        _ContactItem(icon: AppIcons.email, label: AppStrings.labelEmail, value: PortfolioData.email),
+        _ContactItem(
+          icon: AppIcons.email,
+          label: AppStrings.labelEmail,
+          value: PortfolioData.email,
+        ),
         SizedBox(height: Get.width * 0.018),
-        _ContactItem(icon: AppIcons.location, label: AppStrings.labelLocation, value: PortfolioData.location),
+        _ContactItem(
+          icon: AppIcons.location,
+          label: AppStrings.labelLocation,
+          value: PortfolioData.location,
+        ),
       ],
     );
   }
 
   Widget _buildContactForm(BuildContext context) {
+    final controller = Get.isRegistered<ContactController>()
+        ? Get.find<ContactController>()
+        : Get.put(ContactController());
+
     return Container(
       padding: const EdgeInsets.all(40),
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).dividerTheme.color ?? AppColors.grey, width: 0.5),
+        border: Border.all(
+          color: Theme.of(context).dividerTheme.color ?? AppColors.grey,
+          width: 0.5,
+        ),
       ),
       child: Column(
         children: [
-          _buildTextField(context, AppStrings.labelName),
-          SizedBox(height: Get.width * 0.015),
-          _buildTextField(context, AppStrings.labelEmail),
-          SizedBox(height: Get.width * 0.015),
-          _buildTextField(context, AppStrings.labelMessage, maxLines: 5),
-          SizedBox(height: Get.width * 0.02),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.gold,
-                foregroundColor: AppColors.black,
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text(
-                AppStrings.sendMessage,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: AppTextSizes.bodyMedium,
-                ),
-              ),
-            ),
+          _buildTextField(
+            context,
+            AppStrings.labelName,
+            controller: controller.nameController,
           ),
+          SizedBox(height: Get.width * 0.015),
+          _buildTextField(
+            context,
+            AppStrings.labelEmail,
+            controller: controller.emailController,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          SizedBox(height: Get.width * 0.015),
+          _buildTextField(
+            context,
+            AppStrings.labelMessage,
+            controller: controller.messageController,
+            maxLines: 5,
+          ),
+          SizedBox(height: Get.width * 0.02),
+          Obx(() {
+            final isLoading = controller.isLoading.value;
+            return SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: isLoading ? null : controller.submitContactForm,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.gold,
+                  foregroundColor: AppColors.black,
+                  disabledBackgroundColor: AppColors.gold.withValues(
+                    alpha: 0.6,
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.black,
+                        ),
+                      )
+                    : Text(
+                        AppStrings.sendMessage,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: AppTextSizes.bodyMedium,
+                        ),
+                      ),
+              ),
+            );
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildTextField(BuildContext context, String label, {int maxLines = 1}) {
+  Widget _buildTextField(
+    BuildContext context,
+    String label, {
+    int maxLines = 1,
+    TextEditingController? controller,
+    TextInputType? keyboardType,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -159,7 +219,9 @@ class ContactSection extends StatelessWidget {
         ),
         SizedBox(height: Get.width * 0.008),
         TextField(
+          controller: controller,
           maxLines: maxLines,
+          keyboardType: keyboardType,
           style: TextStyle(
             color: Theme.of(context).textTheme.bodyLarge?.color,
             fontSize: AppTextSizes.bodyMedium,
@@ -169,11 +231,19 @@ class ContactSection extends StatelessWidget {
             fillColor: Theme.of(context).colorScheme.surface,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Theme.of(context).dividerTheme.color ?? AppColors.darkBorder),
+              borderSide: BorderSide(
+                color:
+                    Theme.of(context).dividerTheme.color ??
+                    AppColors.darkBorder,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Theme.of(context).dividerTheme.color ?? AppColors.darkBorder),
+              borderSide: BorderSide(
+                color:
+                    Theme.of(context).dividerTheme.color ??
+                    AppColors.darkBorder,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -190,14 +260,21 @@ class _ContactItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const _ContactItem({required this.icon, required this.label, required this.value});
+
+  const _ContactItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
+      mainAxisAlignment: isMobile
+          ? MainAxisAlignment.center
+          : MainAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.all(15),
