@@ -61,4 +61,9 @@ class AppIcons {
   static const IconData cart = Icons.shopping_cart;
   static const IconData graph = Icons.auto_graph;
   static const IconData layers = Icons.layers;
+
+  //Project Icon
+  static const String logoRukmini = "assets/logo/rukmini_logo.png";
+  static const String logoKohira = "assets/logo/kohira_Logo.png";
+  static const String logoClassic = "assets/logo/clssic_logo.png";
 }

@@ -20,7 +20,7 @@ class ContactSection extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(
         horizontal: padding,
-        vertical: Get.width * 0.05,
+        vertical: Get.width * 0.002,
       ),
       color: AppColors.transparent,
       child: Center(

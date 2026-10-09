@@ -18,12 +18,19 @@ class ServicesSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: Get.width * 0.05),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: Get.width * 0.015,
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.maxContentWidth,
+          ),
           child: Column(
-            crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+            crossAxisAlignment: isMobile
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
             children: [
               _buildHeader(context),
               SizedBox(height: Get.width * 0.035),
@@ -39,7 +46,8 @@ class ServicesSection extends StatelessWidget {
                   mainAxisSpacing: 25,
                   childAspectRatio: isMobile ? 1.2 : 0.85,
                 ),
-                itemBuilder: (context, index) => _buildServiceCard(context, PortfolioData.services[index]),
+                itemBuilder: (context, index) =>
+                    _buildServiceCard(context, PortfolioData.services[index]),
               ),
             ],
           ),
@@ -51,7 +59,9 @@ class ServicesSection extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
     return Column(
-      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         Text(
           AppStrings.services,
@@ -82,10 +92,15 @@ class ServicesSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Theme.of(context).dividerTheme.color ?? AppColors.grey, width: 0.5),
+        border: Border.all(
+          color: Theme.of(context).dividerTheme.color ?? AppColors.grey,
+          width: 0.5,
+        ),
       ),
       child: Column(
-        crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+        crossAxisAlignment: isMobile
+            ? CrossAxisAlignment.center
+            : CrossAxisAlignment.start,
         children: [
           Container(
             padding: const EdgeInsets.all(12),
@@ -110,7 +125,9 @@ class ServicesSection extends StatelessWidget {
             service.description,
             textAlign: isMobile ? TextAlign.center : TextAlign.start,
             style: TextStyle(
-              color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+              color: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
               fontSize: AppTextSizes.bodyMedium,
               height: 1.6,
             ),

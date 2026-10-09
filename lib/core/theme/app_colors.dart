@@ -52,4 +52,23 @@ class AppColors {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+  // --- Brand Color Helper ---
+  static Color getBrandColor(String name) {
+    name = name.toLowerCase();
+    if (name.contains("flutter")) return Colors.blue;
+    if (name.contains("dart")) return Colors.blueAccent;
+    if (name.contains("android")) return Colors.green;
+    if (name.contains("ios")) return AppColors.grey;
+    if (name.contains("getx")) return Colors.deepPurpleAccent;
+    if (name.contains("provider")) return Colors.blue;
+    if (name.contains("riverpod")) return Colors.lightBlue;
+    if (name.contains("firebase")) return Colors.orangeAccent;
+    if (name.contains("api") || name.contains("dio")) return Colors.orange;
+    if (name.contains("auth")) return AppColors.redAccent;
+    if (name.contains("git")) return const Color(0xFFF05032);
+    if (name.contains("figma")) return Colors.purple;
+    if (name.contains("postman")) return Colors.orange;
+    return AppColors.gold;
+  }
 }

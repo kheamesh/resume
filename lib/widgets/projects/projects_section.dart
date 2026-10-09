@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_icons.dart';
 import '../../core/constants/app_text_sizes.dart';
 import '../../core/theme/app_colors.dart';
@@ -39,8 +40,7 @@ class ProjectsSection extends StatelessWidget {
               SizedBox(height: Get.width * 0.02),
               _buildFilters(context, controller),
               SizedBox(height: Get.width * 0.03),
-              Obx(
-                () => _buildFeaturedProjects(
+              Obx(() => _buildFeaturedProjects(
                   controller.filteredProjects
                       .where((p) => p.isFeatured)
                       .toList(),
@@ -199,14 +199,31 @@ class _FeaturedProjectCard extends StatelessWidget {
   Widget _buildImage(BuildContext context) {
     final isMobile = ResponsiveLayout.isMobile(context);
     return Container(
-      height: isMobile ? 250 : 450,
+      height: isMobile ? 220 : 360,
       color: Theme.of(context).colorScheme.surface,
       child: Center(
-        child: Icon(
-          AppIcons.laptop,
-          size: isMobile ? 60 : 100,
-          color: AppColors.gold.withValues(alpha: 0.1),
-        ),
+        child: project.imageUrl != null
+            ? Container(
+                constraints: BoxConstraints(
+                  maxHeight: isMobile ? 110 : 160,
+                  maxWidth: isMobile ? 180 : 280,
+                ),
+                padding: const EdgeInsets.all(16.0),
+                child: Image.asset(
+                  project.imageUrl!,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    AppIcons.laptop,
+                    size: isMobile ? 48 : 70,
+                    color: AppColors.gold.withValues(alpha: 0.1),
+                  ),
+                ),
+              )
+            : Icon(
+                AppIcons.laptop,
+                size: isMobile ? 48 : 70,
+                color: AppColors.gold.withValues(alpha: 0.1),
+              ),
       ),
     );
   }
@@ -271,13 +288,35 @@ class _FeaturedProjectCard extends StatelessWidget {
                 : MainAxisAlignment.start,
             children: [
               if (project.githubUrl != null)
-                IconButton(icon: const Icon(AppIcons.code), onPressed: () {}),
+                IconButton(
+                  icon: const Icon(AppIcons.github),
+                  tooltip: "View on GitHub",
+                  onPressed: () {
+                    launchUrl(Uri.parse(project.githubUrl!));
+                  },
+                ),
               if (project.liveUrl != null)
-                IconButton(icon: const Icon(AppIcons.launch), onPressed: () {}),
+                IconButton(
+                  icon: const Icon(AppIcons.launch),
+                  tooltip: "Live Demo",
+                  onPressed: () {
+                    launchUrl(Uri.parse(project.liveUrl!));
+                  },
+                ),
               if (!isMobile) const Spacer(),
-              TextButton(
-                onPressed: () {},
-                child: Text(
+              TextButton.icon(
+                onPressed: () {
+                  final url = project.githubUrl ?? project.liveUrl;
+                  if (url != null) {
+                    launchUrl(Uri.parse(url));
+                  }
+                },
+                icon: const Icon(
+                  AppIcons.github,
+                  size: 16,
+                  color: AppColors.gold,
+                ),
+                label: Text(
                   AppStrings.viewCaseStudy,
                   style: TextStyle(
                     color: AppColors.gold,
@@ -307,91 +346,133 @@ class _ProjectGridCard extends StatelessWidget {
     );
 
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (_) => hoverController.setHover(true),
       onExit: (_) => hoverController.setHover(false),
-      child: Obx(
-        () => AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardTheme.color,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: hoverController.isHovered.value
-                  ? AppColors.gold
-                  : (Theme.of(context).dividerTheme.color ?? AppColors.grey),
-              width: 0.5,
+      child: GestureDetector(
+        onTap: () {
+          final url = project.githubUrl ?? project.liveUrl;
+          if (url != null) {
+            launchUrl(Uri.parse(url));
+          }
+        },
+        child: Obx(
+          () => AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardTheme.color,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: hoverController.isHovered.value
+                    ? AppColors.gold
+                    : (Theme.of(context).dividerTheme.color ?? AppColors.grey),
+                width: 0.5,
+              ),
+              boxShadow: hoverController.isHovered.value
+                  ? [
+                      BoxShadow(
+                        color: AppColors.gold.withValues(alpha: 0.1),
+                        blurRadius: 20,
+                        spreadRadius: 5,
+                      ),
+                    ]
+                  : [],
             ),
-            boxShadow: hoverController.isHovered.value
-                ? [
-                    BoxShadow(
-                      color: AppColors.gold.withValues(alpha: 0.1),
-                      blurRadius: 20,
-                      spreadRadius: 5,
-                    ),
-                  ]
-                : [],
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Container(
-                  color: Theme.of(context).colorScheme.surface,
-                  width: double.infinity,
-                  child: Icon(
-                    AppIcons.image,
-                    size: 50,
-                    color: AppColors.gold.withValues(alpha: 0.1),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).colorScheme.surface,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: project.imageUrl != null
+                        ? Container(
+                            constraints: const BoxConstraints(
+                              maxHeight: 150,
+                              maxWidth: 240,
+                            ),
+                            padding: const EdgeInsets.all(12.0),
+                            child: Image.asset(
+                              project.imageUrl!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                    AppIcons.image,
+                                    size: 50,
+                                    color: AppColors.gold.withValues(
+                                      alpha: 0.1,
+                                    ),
+                                  ),
+                            ),
+                          )
+                        : Icon(
+                            AppIcons.image,
+                            size: 50,
+                            color: AppColors.gold.withValues(alpha: 0.1),
+                          ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      project.name,
-                      style: TextStyle(
-                        fontSize: AppTextSizes.cardTitle,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).textTheme.titleLarge?.color,
+                Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        project.name,
+                        style: TextStyle(
+                          fontSize: AppTextSizes.cardTitle,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).textTheme.titleLarge?.color,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: Get.width * 0.008),
-                    Text(
-                      project.description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        fontSize: AppTextSizes.bodySmall,
-                        height: 1.5,
+                      SizedBox(height: Get.width * 0.008),
+                      Text(
+                        project.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontSize: AppTextSizes.bodySmall,
+                          height: 1.5,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: Get.width * 0.015),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          project.category ?? "App",
-                          style: TextStyle(
-                            color: AppColors.gold,
-                            fontSize: AppTextSizes.caption,
+                      SizedBox(height: Get.width * 0.015),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            project.category ?? "App",
+                            style: TextStyle(
+                              color: AppColors.gold,
+                              fontSize: AppTextSizes.caption,
+                            ),
                           ),
-                        ),
-                        const Icon(
-                          AppIcons.arrowForward,
-                          size: 16,
-                          color: AppColors.gold,
-                        ),
-                      ],
-                    ),
-                  ],
+                          Row(
+                            children: [
+                              Text(
+                                "SHOW PROJECT ",
+                                style: TextStyle(
+                                  color: AppColors.gold,
+                                  fontSize: AppTextSizes.caption,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Icon(
+                                AppIcons.arrowForward,
+                                size: 16,
+                                color: AppColors.gold,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

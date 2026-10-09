@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../core/constants/app_strings.dart';
 import '../core/theme/app_colors.dart';
 
@@ -60,13 +61,43 @@ class ContactController extends GetxController {
     isSuccess.value = false;
 
     try {
-      await FirebaseFirestore.instance.collection('contacts').add({
+      final now = DateTime.now().toIso8601String();
+      final contactData = {
         'name': name,
         'email': email,
         'message': message,
         'timestamp': FieldValue.serverTimestamp(),
-        'createdAt': DateTime.now().toIso8601String(),
-      });
+        'createdAt': now,
+      };
+
+      // 1. Target Firestore document at /data/A2UdF5PIX4lS8LuiTosy
+      final docRef = FirebaseFirestore.instance.doc(
+        'data/A2UdF5PIX4lS8LuiTosy',
+      );
+
+      // Save into subcollection 'contacts' under /data/A2UdF5PIX4lS8LuiTosy
+      await docRef.collection('contacts').add(contactData);
+
+      // Save/merge into the main document /data/A2UdF5PIX4lS8LuiTosy
+      await docRef.set({
+        'lastSubmission': {
+          'name': name,
+          'email': email,
+          'message': message,
+          'createdAt': now,
+        },
+        'messages': FieldValue.arrayUnion([
+          {'name': name, 'email': email, 'message': message, 'createdAt': now},
+        ]),
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      // 2. Also save to top-level 'contacts' collection for backup/compatibility
+      try {
+        await FirebaseFirestore.instance
+            .collection('contacts')
+            .add(contactData);
+      } catch (_) {}
 
       isSuccess.value = true;
       nameController.clear();
@@ -81,6 +112,33 @@ class ContactController extends GetxController {
     } catch (e) {
       debugPrint('Firestore submission error: $e');
       errorMessage.value = e.toString();
+
+      if (e.toString().contains('permission-denied')) {
+        // Fallback: Open Email client with prefilled Name, Email & Message
+        try {
+          final Uri emailLaunchUri = Uri(
+            scheme: 'mailto',
+            path: AppStrings.email,
+            queryParameters: {
+              'subject': 'Portfolio Message from $name',
+              'body': 'Name: $name\nEmail: $email\n\nMessage:\n$message',
+            },
+          );
+          await launchUrl(emailLaunchUri, mode: LaunchMode.externalApplication);
+
+          isSuccess.value = true;
+          nameController.clear();
+          emailController.clear();
+          messageController.clear();
+
+          _showSnackbar(
+            AppStrings.success,
+            "Opening email app to send your message directly!",
+            isError: false,
+          );
+          return;
+        } catch (_) {}
+      }
 
       String userFriendlyMessage = e.toString();
       if (e.toString().contains('permission-denied')) {

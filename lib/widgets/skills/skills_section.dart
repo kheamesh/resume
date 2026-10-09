@@ -24,11 +24,16 @@ class SkillsSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: Get.width * 0.02),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: Get.width * 0.02,
+      ),
       color: AppColors.transparent,
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.maxContentWidth,
+          ),
           child: Column(
             crossAxisAlignment: isMobile
                 ? CrossAxisAlignment.center
@@ -46,7 +51,10 @@ class SkillsSection extends StatelessWidget {
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    _buildDesktopLayout(context, controller.animationController),
+                    _buildDesktopLayout(
+                      context,
+                      controller.animationController,
+                    ),
                   ],
                 ),
             ],
@@ -242,19 +250,15 @@ class SkillsSection extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final app_icon = skill.icon;
     const app_color = AppColors.gold;
-    final brandColor = _getBrandColor(skill.name);
+    final brandColor = AppColors.getBrandColor(skill.name);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: isDark
-            ? (parentHovered
-                  ? AppColors.darkHoverCard
-                  : AppColors.darkCardAlt)
-            : (parentHovered
-                  ? AppColors.lightHoverCard
-                  : AppColors.lightBg),
+            ? (parentHovered ? AppColors.darkHoverCard : AppColors.darkCardAlt)
+            : (parentHovered ? AppColors.lightHoverCard : AppColors.lightBg),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: parentHovered
@@ -282,24 +286,6 @@ class SkillsSection extends StatelessWidget {
       ),
     );
   }
-}
-
-Color _getBrandColor(String name) {
-  name = name.toLowerCase();
-  if (name.contains("flutter")) return Colors.blue;
-  if (name.contains("dart")) return Colors.blueAccent;
-  if (name.contains("android")) return Colors.green;
-  if (name.contains("ios")) return AppColors.grey;
-  if (name.contains("getx")) return Colors.deepPurpleAccent;
-  if (name.contains("provider")) return Colors.blue;
-  if (name.contains("riverpod")) return Colors.lightBlue;
-  if (name.contains("firebase")) return Colors.orangeAccent;
-  if (name.contains("api") || name.contains("dio")) return Colors.orange;
-  if (name.contains("auth")) return AppColors.redAccent;
-  if (name.contains("git")) return const Color(0xFFF05032);
-  if (name.contains("figma")) return Colors.purple;
-  if (name.contains("postman")) return Colors.orange;
-  return AppColors.gold;
 }
 
 class SkillHoverController extends GetxController {

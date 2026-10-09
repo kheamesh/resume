@@ -17,10 +17,15 @@ class ExperienceSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: padding, vertical: Get.width * 0.01),
+      padding: EdgeInsets.symmetric(
+        horizontal: padding,
+        vertical: Get.width * 0.01,
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.maxContentWidth,
+          ),
           child: Column(
             crossAxisAlignment: isMobile
                 ? CrossAxisAlignment.center
@@ -66,22 +71,17 @@ class ExperienceSection extends StatelessWidget {
       itemCount: PortfolioData.experiences.length,
       itemBuilder: (ctx, index) {
         final exp = PortfolioData.experiences[index];
-        return IntrinsicHeight(
+        final isLast = index == PortfolioData.experiences.length - 1;
+        return Padding(
+          padding: EdgeInsets.only(bottom: isLast ? 0 : Get.width * 0.03),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (!isMobile) ...[
-                _buildTimelineIndicator(
-                  ctx,
-                  index == PortfolioData.experiences.length - 1,
-                ),
+                _buildTimelineIndicator(ctx, isLast),
                 SizedBox(width: Get.width * 0.012),
               ],
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: Get.width * 0.03),
-                  child: _buildExperienceCard(ctx, exp),
-                ),
-              ),
+              Expanded(child: _buildExperienceCard(ctx, exp)),
             ],
           ),
         );
@@ -91,7 +91,9 @@ class ExperienceSection extends StatelessWidget {
 
   Widget _buildTimelineIndicator(BuildContext context, bool isLast) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
+        const SizedBox(height: 12),
         Container(
           width: 15,
           height: 15,
@@ -106,13 +108,6 @@ class ExperienceSection extends StatelessWidget {
             ],
           ),
         ),
-        if (!isLast)
-          Expanded(
-            child: Container(
-              width: 1,
-              color: Theme.of(context).dividerTheme.color,
-            ),
-          ),
       ],
     );
   }
@@ -222,22 +217,15 @@ class ExperienceSection extends StatelessWidget {
               .map(
                 (res) => Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("• ", style: TextStyle(color: AppColors.gold)),
-                      Expanded(
-                        child: Text(
-                          res,
-                          style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyLarge?.color
-                                ?.withValues(alpha: 0.8),
-                            fontSize: AppTextSizes.bodyMedium,
-                            height: 1.6,
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    res,
+                    style: TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.color?.withValues(alpha: 0.85),
+                      fontSize: AppTextSizes.bodyMedium,
+                      height: 1.6,
+                    ),
                   ),
                 ),
               )

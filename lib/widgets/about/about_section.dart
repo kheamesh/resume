@@ -25,7 +25,9 @@ class AboutSection extends StatelessWidget {
       ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: AppConstants.maxContentWidth),
+          constraints: const BoxConstraints(
+            maxWidth: AppConstants.maxContentWidth,
+          ),
           child: Column(
             crossAxisAlignment: isMobile
                 ? CrossAxisAlignment.center

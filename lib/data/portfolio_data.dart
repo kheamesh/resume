@@ -1,9 +1,11 @@
+import 'package:resume/core/constants/app_url.dart';
+
 import '../core/constants/app_icons.dart';
 import '../models/project.dart';
 import '../models/experience.dart';
 import '../models/skill.dart';
 import '../models/service.dart';
-
+import '../core/theme/app_logo.dart';
 import '../core/constants/app_strings.dart';
 
 class PortfolioData {
@@ -12,94 +14,134 @@ class PortfolioData {
   static const String shortIntro = AppStrings.shortIntro;
   static const String aboutSummary = AppStrings.aboutSummary;
 
-  static const String experienceYears = "2+";
-  static const String projectsCompleted = "15+";
-  static const String technologiesCount = "10+";
-  static const String clientsServed = "5+";
+  static const String experienceYears = AppStrings.expYearsValue;
+  static const String projectsCompleted = AppStrings.projectsCompletedValue;
+  static const String technologiesCount = AppStrings.technologiesCountValue;
+  static const String clientsServed = AppStrings.clientsServedValue;
 
   static final List<Experience> experiences = [
     Experience(
-      company: "Tech Solutions Inc.",
-      role: "Senior Flutter Developer",
-      duration: "2024 — Present",
-      location: "Remote",
-      responsibilities: [
-        "Developed production-ready Flutter applications for high-traffic clients",
-        "Integrated complex REST APIs and optimized network calls using Dio",
-        "Implemented responsive UI that works seamlessly across all screen sizes",
-        "Utilized GetX for robust state management and navigation control",
-        "Mentored junior developers and conducted thorough code reviews"
+      company: AppStrings.expCompany1,
+      role: AppStrings.expRole1,
+      duration: AppStrings.expDuration1,
+      location: AppStrings.expLocation1,
+      responsibilities: [AppStrings.expSummary1],
+      technologies: [
+        "Flutter",
+        "Dart",
+        "GetX",
+        "Provider",
+        "BLoC",
+        "REST API",
+        "Firebase",
+        "Git",
+        "Android SDK",
       ],
-      technologies: ["Flutter", "Dart", "GetX", "REST API", "Firebase"],
-      achievements: [
-        "Improved application startup time by 30%",
-        "Successfully launched 3 major apps in the App Store and Play Store"
-      ],
-    ),
-    Experience(
-      company: "Creative Apps Studio",
-      role: "Flutter Developer",
-      duration: "2022 — 2023",
-      location: "Bhopal, India",
-      responsibilities: [
-        "Built custom UI components and animations using Flutter",
-        "Collaborated with UI/UX designers to implement pixel-perfect designs",
-        "Integrated third-party SDKs and payment gateways",
-        "Maintained and updated existing Flutter projects to the latest SDK versions"
-      ],
-      technologies: ["Flutter", "Dart", "Provider", "SQLite", "Git"],
-      achievements: [
-        "Delivered a complete e-commerce solution in record time",
-        "Implemented a highly efficient offline storage system using Hive"
-      ],
+      achievements: [AppStrings.expAchieve1_1, AppStrings.expAchieve1_2],
     ),
   ];
 
   static final List<Project> projects = [
     Project(
-      name: "FinTech Pro",
-      description: "A comprehensive financial management application with real-time tracking.",
-      problemSolved: "Helped users manage their personal finances with complex data visualization and secure transactions.",
-      technologies: ["Flutter", "Firebase", "GetX", "Charts"],
-      features: ["Expense Tracking", "Investment Portfolio", "Bill Reminders", "PDF Reports"],
+      name: AppStrings.projRukminiName,
+      description: AppStrings.projRukminiDesc,
+      problemSolved: AppStrings.projRukminiProblem,
+      technologies: ["Flutter", "Dart", "GetX", "REST API", "Firebase"],
+      features: [
+        AppStrings.featureJewelryInventory,
+        AppStrings.featureWeightCalc,
+        AppStrings.featureStockReports,
+        AppStrings.featureGetxState,
+      ],
       isFeatured: true,
-      category: "Mobile",
-      githubUrl: "https://github.com/kheamesh/fintech-pro",
-      liveUrl: "https://fintech-pro.web.app",
+      category: AppStrings.categoryMobile,
+      githubUrl: AppStrings.projRukminiGithub,
+      imageUrl: AppLogo.logoRukmini,
     ),
     Project(
-      name: "HealthConnect",
-      description: "Bridging the gap between patients and doctors with seamless teleconsultation.",
-      problemSolved: "Streamlined the appointment booking process and integrated secure video calling.",
-      technologies: ["Flutter", "WebRTC", "Agora", "Node.js"],
-      features: ["Video Consultation", "Digital Prescriptions", "Chat System", "Payment Integration"],
+      name: AppStrings.projKohiraName,
+      description: AppStrings.projKohiraDesc,
+      problemSolved: AppStrings.projKohiraProblem,
+      technologies: ["Flutter", "Dart", "GetX", "REST API", "SQLite"],
+      features: [
+        AppStrings.featureJewelryCatalog,
+        AppStrings.featureCategoryFilters,
+        AppStrings.featureSmartCheckout,
+        AppStrings.featureGetxState,
+      ],
       isFeatured: true,
-      category: "Mobile",
-      githubUrl: "https://github.com/kheamesh/health-connect",
+      category: AppStrings.categoryMobile,
+      githubUrl: AppUrl.projKohiraGithub,
+      imageUrl: AppLogo.logoKohira,
     ),
     Project(
-      name: "E-Commerce Luxe",
-      description: "A premium shopping experience with smooth transitions and high performance.",
-      problemSolved: "Created a high-converting mobile storefront with advanced search and filtering.",
-      technologies: ["Flutter Web", "REST API", "Riverpod", "Stripe"],
-      features: ["Product Discovery", "Smart Cart", "Multi-currency support", "Admin Panel"],
-      isFeatured: false,
-      category: "Web",
+      name: AppStrings.projTradeAtName,
+      description: AppStrings.projTradeAtDesc,
+      problemSolved: AppStrings.projTradeAtProblem,
+      technologies: ["Flutter", "Dart", "REST API", "Charts", "GetX"],
+      features: [
+        AppStrings.featureLiveMarketTracking,
+        AppStrings.featurePortfolioAnalytics,
+        AppStrings.featureInteractiveCharts,
+        AppStrings.featureRealtimeAlerts,
+      ],
+      isFeatured: true,
+      category: AppStrings.categoryMobile,
+      githubUrl: AppUrl.projTradeAtGithub,
+      imageUrl: AppLogo.logoTradeAt,
     ),
     Project(
-      name: "TaskMaster AI",
-      description: "Smart task management utilizing AI for prioritization and scheduling.",
-      problemSolved: "Reduced time spent on task organization by 40% through intelligent automation.",
-      technologies: ["Flutter", "OpenAI API", "SQLite", "Provider"],
-      features: ["AI Scheduling", "Voice Commands", "Cloud Sync", "Collaborative Boards"],
+      name: AppStrings.projHirExpertName,
+      description: AppStrings.projHirExpertDesc,
+      problemSolved: AppStrings.projHirExpertProblem,
+      technologies: ["Flutter", "Dart", "Firebase", "Node.js", "GetX"],
+      features: [
+        AppStrings.featureJobSearch,
+        AppStrings.featureRecruiterProfiles,
+        AppStrings.featureInAppMessaging,
+        AppStrings.featureInterviewManagement,
+      ],
+      isFeatured: true,
+      category: AppStrings.categoryMobile,
+      githubUrl: AppUrl.projHirExpertGithub,
+      imageUrl: AppLogo.logoHirExpert,
+    ),
+    Project(
+      name: AppStrings.projClassicName,
+      description: AppStrings.projClassicDesc,
+      problemSolved: AppStrings.projClassicProblem,
+      technologies: ["Flutter", "Dart", "GetX", "UI/UX", "REST API"],
+      features: [
+        AppStrings.featureLuxuryShowcase,
+        AppStrings.featureProductCustomization,
+        AppStrings.featureSecurePayments,
+        AppStrings.featureGetxState,
+      ],
       isFeatured: false,
-      category: "Mobile",
+      category: AppStrings.categoryMobile,
+      githubUrl: AppUrl.projClassicGithub,
+      imageUrl: AppLogo.logoClassic,
+    ),
+    Project(
+      name: AppStrings.projResumePortfolioName,
+      description: AppStrings.projResumePortfolioDesc,
+      problemSolved: AppStrings.projResumePortfolioProblem,
+      technologies: ["Flutter Web", "Dart", "GetX", "Animate Do"],
+      features: [
+        AppStrings.featureResponsiveLayout,
+        AppStrings.featureThemeSwitcher,
+        AppStrings.featurePdfResumeViewer,
+        AppStrings.featureGithubIntegration,
+      ],
+      isFeatured: false,
+      category: AppStrings.categoryWeb,
+      githubUrl: AppUrl.projResumePortfolioGithub,
     ),
   ];
 
   static final List<SkillCategory> skillCategories = [
     SkillCategory(
-      title: "Mobile Development",
+      title: AppStrings.skillCatMobile,
       skills: [
         Skill(name: "Flutter", icon: AppIcons.flutter),
         Skill(name: "Dart", icon: AppIcons.dart),
@@ -108,7 +150,7 @@ class PortfolioData {
       ],
     ),
     SkillCategory(
-      title: "State Management",
+      title: AppStrings.skillCatState,
       skills: [
         Skill(name: "GetX", icon: AppIcons.getx),
         Skill(name: "Provider", icon: AppIcons.provider),
@@ -116,7 +158,7 @@ class PortfolioData {
       ],
     ),
     SkillCategory(
-      title: "Backend / API",
+      title: AppStrings.skillCatBackend,
       skills: [
         Skill(name: "REST API", icon: AppIcons.api),
         Skill(name: "Dio", icon: AppIcons.http),
@@ -125,7 +167,7 @@ class PortfolioData {
       ],
     ),
     SkillCategory(
-      title: "Tools & Design",
+      title: AppStrings.skillCatTools,
       skills: [
         Skill(name: "Git", icon: AppIcons.gitAlt),
         Skill(name: "GitHub", icon: AppIcons.github),
@@ -137,41 +179,59 @@ class PortfolioData {
 
   static final List<Service> services = [
     Service(
-      title: "Mobile App Development",
-      description: "Building high-performance, native-like mobile applications for both iOS and Android using Flutter.",
+      title: AppStrings.serviceTitleMobile,
+      description: AppStrings.serviceDescMobile,
       icon: AppIcons.mobileApp,
     ),
     Service(
-      title: "Web Development",
-      description: "Creating responsive and fast web applications using Flutter Web for a consistent cross-platform experience.",
+      title: AppStrings.serviceTitleWeb,
+      description: AppStrings.serviceDescWeb,
       icon: AppIcons.webApp,
     ),
     Service(
-      title: "UI/UX Implementation",
-      description: "Translating complex designs into pixel-perfect, interactive, and user-friendly Flutter interfaces.",
+      title: AppStrings.serviceTitleUiUx,
+      description: AppStrings.serviceDescUiUx,
       icon: AppIcons.uiDesign,
     ),
     Service(
-      title: "API Integration",
-      description: "Seamlessly connecting Flutter applications with complex RESTful APIs and backend services.",
+      title: AppStrings.serviceTitleApi,
+      description: AppStrings.serviceDescApi,
       icon: AppIcons.apiSync,
     ),
   ];
 
   static final List<Map<String, String>> processSteps = [
-    {"title": "Understand", "desc": "Understand the business problem and requirements."},
-    {"title": "Plan", "desc": "Plan architecture, UI and technical approach."},
-    {"title": "Design", "desc": "Create clean and intuitive user experiences."},
-    {"title": "Develop", "desc": "Build scalable and maintainable Flutter applications."},
-    {"title": "Test", "desc": "Test performance, responsiveness and reliability."},
-    {"title": "Deploy", "desc": "Release and maintain the application."},
+    {
+      "title": AppStrings.processStep1Title,
+      "desc": AppStrings.processStep1Desc,
+    },
+    {
+      "title": AppStrings.processStep2Title,
+      "desc": AppStrings.processStep2Desc,
+    },
+    {
+      "title": AppStrings.processStep3Title,
+      "desc": AppStrings.processStep3Desc,
+    },
+    {
+      "title": AppStrings.processStep4Title,
+      "desc": AppStrings.processStep4Desc,
+    },
+    {
+      "title": AppStrings.processStep5Title,
+      "desc": AppStrings.processStep5Desc,
+    },
+    {
+      "title": AppStrings.processStep6Title,
+      "desc": AppStrings.processStep6Desc,
+    },
   ];
 
   static final List<Map<String, String>> achievements = [
-    {"title": "Production Apps", "value": "12+"},
-    {"title": "API Integrations", "value": "50+"},
-    {"title": "Performance Boost", "value": "40%"},
-    {"title": "Happy Clients", "value": "20+"},
+    {"title": AppStrings.achieveTitle1, "value": AppStrings.achieveVal1},
+    {"title": AppStrings.achieveTitle2, "value": AppStrings.achieveVal2},
+    {"title": AppStrings.achieveTitle3, "value": AppStrings.achieveVal3},
+    {"title": AppStrings.achieveTitle4, "value": AppStrings.achieveVal4},
   ];
 
   static const String email = AppStrings.email;

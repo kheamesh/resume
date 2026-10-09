@@ -137,11 +137,11 @@ class ProcessSection extends StatelessWidget {
             : CrossAxisAlignment.start,
         children: [
           Text(
-            "0$index",
+            index < 10 ? "0$index" : "$index",
             style: TextStyle(
               fontSize: AppTextSizes.numberHeading,
               fontWeight: FontWeight.w900,
-              color: AppColors.gold.withValues(alpha: 0.1),
+              color: AppColors.gold,
             ),
           ),
           SizedBox(height: Get.width * 0.008),
